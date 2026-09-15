@@ -218,6 +218,8 @@
   .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
   .field label{font-size:12.5px;color:var(--ink-soft);font-weight:500;}
   .field input, .field select{
+    width:100%;
+    min-width:0;
     padding:12px 13px;
     min-height:46px;
     border:1px solid var(--line);
@@ -225,7 +227,11 @@
     background:var(--paper);
     color:var(--ink);
   }
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-width:0;}
+  .row2 > .field{min-width:0;}
+  @media (max-width:380px){
+    .row2{grid-template-columns:1fr;}
+  }
   .cats{display:flex;flex-wrap:wrap;gap:8px;}
   .cat-btn{
     display:flex;align-items:center;gap:7px;
@@ -432,6 +438,32 @@
   }
 
   [hidden]{display:none!important;}
+
+  /* ---------- summary export ---------- */
+  .summary-toolbar{display:flex;justify-content:flex-end;margin-bottom:12px;}
+  .print-header{display:none;}
+
+  @media print{
+    :root{
+      --paper:#FFFFFF;
+      --paper-2:#FFFFFF;
+      --ink:#18181B;
+      --ink-soft:#5A5A54;
+      --line:#D9D7CE;
+      --accent:#3F6F63;
+      --danger:#B3402C;
+      --success:#3B7A54;
+    }
+    body{padding:0;background:#fff;}
+    .wrap{max-width:100%;}
+    .pass, .tabbar, .sync-note, .no-print{display:none!important;}
+    .tab-panel[data-panel="summary"]{display:block!important;}
+    .print-header{display:block;margin-bottom:18px;}
+    .print-header h1{font-size:20px;margin:0 0 4px;}
+    .print-meta{font-size:12px;color:var(--ink-soft);}
+    .card{break-inside:avoid;}
+    .dash-grid{grid-template-columns:repeat(4,1fr);}
+  }
 </style>
 </head>
 <body>
@@ -583,6 +615,13 @@
     </div>
 
     <div class="tab-panel" data-panel="summary" hidden>
+      <div class="summary-toolbar no-print">
+        <button class="btn-ghost" id="exportPdfBtn" type="button">บันทึกเป็น PDF</button>
+      </div>
+      <div class="print-header" id="printHeader">
+        <h1 id="printTripName"></h1>
+        <div class="print-meta" id="printMeta"></div>
+      </div>
       <div class="dash-grid">
         <div class="dash-tile">
           <div class="label">ยอดใช้จ่ายรวมทั้งทริป</div>
@@ -949,6 +988,13 @@
 
     document.getElementById("submitExpenseBtn").addEventListener("click", submitExpense);
     document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+
+    document.getElementById("exportPdfBtn").addEventListener("click", function(){
+      var prevTitle = document.title;
+      document.title = "สรุป " + (state.trip ? state.trip.name : "ทริป");
+      window.print();
+      document.title = prevTitle;
+    });
 
     document.getElementById("addContribBtn").addEventListener("click", async function(){
       var member = document.getElementById("contribMemberSelect").value;
@@ -1431,6 +1477,11 @@
   function renderSummary(){
     var result = computeBalances();
     var members = state.trip.members || [];
+
+    document.getElementById("printTripName").textContent = "สรุปทริป: " + state.trip.name;
+    document.getElementById("printMeta").textContent =
+      "สมาชิก: " + (members.join(", ") || "-") +
+      " · พิมพ์เมื่อ " + new Date().toLocaleDateString("th-TH", {day:"numeric", month:"long", year:"numeric"});
 
     document.getElementById("totalFigure").textContent = fmtMoney(result.total);
     document.getElementById("totalSub").textContent = members.length

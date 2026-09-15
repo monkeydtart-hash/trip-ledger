@@ -3,1562 +3,1517 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ตารางฟุตบอลโลก 2026 (เวลาไทย)</title>
+<meta name="color-scheme" content="light dark">
+<title>สมุดบัญชีทริป</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-  :root {
-    --green: #1b2233;
-    --green-dark: #0b0e16;
-    --gold: #d8b673;
-    --gold-bright: #f0d49a;
-    --gold-soft: rgba(216, 182, 115, 0.12);
-    --bg: #0b0e14;
-    --card: #161b26;
-    --card-border: #272f42;
-    --card-hover: #1e2536;
-    --text: #edf1f6;
-    --muted: #8b96ab;
-    --live: #e1707a;
-    --qualify: rgba(95, 185, 138, 0.13);
-    --qualify-border: #5fb98a;
-    --maybe: rgba(226, 189, 114, 0.13);
-    --maybe-border: #e2bd72;
-    --out: rgba(225, 112, 122, 0.10);
-    --out-border: #e1707a;
-    --radius: 16px;
-    --radius-sm: 10px;
-    --shadow: 0 8px 28px rgba(0,0,0,0.45);
+  :root{
+    --paper:#FAFAF8;
+    --paper-2:#FFFFFF;
+    --ink:#18181B;
+    --ink-soft:#84837C;
+    --line:#E6E4DD;
+    --accent:#3F6F63;
+    --accent-ink:#F7F6F2;
+    --accent-2:#3F6F63;
+    --danger:#B3402C;
+    --success:#3B7A54;
+    --cat-food:#A9895B;
+    --cat-stay:#5B8A82;
+    --cat-transport:#6B84A6;
+    --cat-activity:#9678A0;
+    --cat-other:#9A9A94;
+    --shadow:none;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: 'Prompt', 'Segoe UI', Tahoma, sans-serif;
-    background:
-      radial-gradient(circle at top, #1a2030 0%, var(--bg) 55%);
-    background-attachment: fixed;
-    color: var(--text);
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
-  header.topbar {
-    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
-    border-bottom: 1px solid var(--card-border);
-    color: var(--text);
-    padding: 28px 24px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-  }
-  header.topbar h1 {
-    margin: 0;
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: 0.4px;
-  }
-  header.topbar h1 .sub {
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 300;
-    color: var(--gold);
-    margin-top: 8px;
-    letter-spacing: 0.3px;
-  }
-  .meta {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  #refreshBtn {
-    background: transparent;
-    color: var(--gold-bright);
-    border: 1px solid var(--gold);
-    border-radius: 999px;
-    padding: 8px 20px;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: background 0.2s ease, color 0.2s ease;
-  }
-  #refreshBtn:hover { background: var(--gold-soft); }
-  #refreshBtn:active { transform: scale(0.97); }
-
-  nav.tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    background: rgba(11,14,20,0.85);
-    backdrop-filter: blur(10px);
-    padding: 10px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    border-bottom: 1px solid var(--card-border);
-  }
-  .tab-btn {
-    flex: 1;
-    min-width: 140px;
-    padding: 10px 14px;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 999px;
-    color: var(--muted);
-    font-family: inherit;
-    font-size: 0.92rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .tab-btn:hover { color: var(--text); border-color: var(--card-border); }
-  .tab-btn.active {
-    color: #2a200c;
-    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-    font-weight: 600;
-  }
-
-  main { max-width: 1140px; margin: 0 auto; padding: 22px 16px 60px; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 18px;
-  }
-  select {
-    padding: 10px 16px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--card-border);
-    font-size: 0.9rem;
-    background: var(--card);
-    color: var(--text);
-    font-family: inherit;
-    cursor: pointer;
-  }
-  select:focus { outline: 1px solid var(--gold); }
-  .filters label {
-    font-size: 0.88rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    cursor: pointer;
-  }
-  input[type="checkbox"] { accent-color: var(--gold); width: 16px; height: 16px; }
-
-  .date-heading {
-    margin: 28px 0 12px;
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--gold-bright);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    letter-spacing: 0.3px;
-  }
-  .date-heading::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--card-border);
-  }
-
-  .today-section {
-    max-width: 1140px;
-    margin: 20px auto 0;
-    padding: 0 16px;
-  }
-  .today-heading {
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--gold-bright);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    letter-spacing: 0.3px;
-    margin-bottom: 12px;
-  }
-  .today-heading .badge {
-    font-size: 0.7rem;
-    font-weight: 600;
-    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-    color: #2a200c;
-    border-radius: 999px;
-    padding: 4px 12px;
-  }
-  .today-section .match-card {
-    border-color: var(--gold);
-  }
-  .match-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    padding: 14px 18px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 14px;
-    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
-  }
-  .match-card:hover {
-    border-color: var(--gold);
-    background: var(--card-hover);
-    transform: translateY(-2px);
-  }
-  .match-time {
-    min-width: 56px;
-    font-weight: 600;
-    color: var(--gold-bright);
-    font-size: 1rem;
-    text-align: center;
-  }
-  .match-teams {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-size: 0.98rem;
-    font-weight: 500;
-    min-width: 240px;
-  }
-  .match-teams .team {
-    flex: 1;
-    text-align: right;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-  .match-teams .team.away {
-    justify-content: flex-start;
-    text-align: left;
-  }
-  .match-teams .score {
-    font-weight: 700;
-    font-size: 1.05rem;
-    background: var(--bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 6px 16px;
-    min-width: 68px;
-    text-align: center;
-    color: var(--gold-bright);
-  }
-  .flag {
-    width: 24px;
-    height: 18px;
-    border-radius: 3px;
-    object-fit: cover;
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
-    vertical-align: middle;
-    flex-shrink: 0;
-  }
-  .match-status {
-    font-size: 0.78rem;
-    color: var(--muted);
-    min-width: 100px;
-    text-align: center;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: var(--bg);
-    border: 1px solid var(--card-border);
-  }
-  .match-status.live {
-    color: var(--live);
-    border-color: var(--live);
-    font-weight: 600;
-  }
-  .live-dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--live);
-    margin-right: 5px;
-    animation: pulse 1.2s infinite;
-  }
-  @keyframes pulse {
-    0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; }
-  }
-  .match-meta {
-    width: 100%;
-    font-size: 0.78rem;
-    color: var(--muted);
-    border-top: 1px solid var(--card-border);
-    padding-top: 8px;
-    margin-top: 2px;
-  }
-
-  .groups-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-  }
-  .group-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    box-shadow: var(--shadow);
-  }
-  .group-card h3 {
-    margin: 0 0 12px;
-    color: var(--gold-bright);
-    font-weight: 600;
-    font-size: 1.05rem;
-  }
-  .table-wrap {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th, td { padding: 8px 6px; text-align: center; white-space: nowrap; }
-  th {
-    color: var(--muted);
-    font-weight: 500;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    border-bottom: 1px solid var(--card-border);
-  }
-  td.team-name { text-align: left; font-weight: 500; }
-  td.team-name .team-full { white-space: normal; word-break: break-word; }
-  tbody tr { border-bottom: 1px solid rgba(255,255,255,0.03); }
-  tr.rank-1, tr.rank-2 { background: var(--qualify); }
-  tr.rank-3 { background: var(--maybe); }
-  tr.rank-4 { background: var(--out); color: var(--muted); }
-
-  @media (max-width: 1024px) {
-    .groups-grid {
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#121212;
+      --paper-2:#1A1A19;
+      --ink:#EDEDEA;
+      --ink-soft:#93938C;
+      --line:#2B2B28;
+      --accent:#6FA396;
+      --accent-ink:#0E1614;
+      --accent-2:#6FA396;
+      --danger:#E0836F;
+      --success:#6FC08A;
+      --cat-food:#C7A576;
+      --cat-stay:#6FA396;
+      --cat-transport:#8FA6C7;
+      --cat-activity:#B49AC0;
+      --cat-other:#9E9E97;
+      --shadow:none;
     }
-    table { font-size: 0.8rem; table-layout: fixed; }
-    th, td { padding: 7px 5px; white-space: normal; overflow-wrap: break-word; }
-    col.col-team { width: 40%; }
-    col.col-gfga, th.col-gfga, td.col-gfga { display: none; }
+  }
+  :root[data-theme="dark"]{
+    --paper:#121212;
+    --paper-2:#1A1A19;
+    --ink:#EDEDEA;
+    --ink-soft:#93938C;
+    --line:#2B2B28;
+    --accent:#6FA396;
+    --accent-ink:#0E1614;
+    --accent-2:#6FA396;
+    --danger:#E0836F;
+    --success:#6FC08A;
+    --cat-food:#C7A576;
+    --cat-stay:#6FA396;
+    --cat-transport:#8FA6C7;
+    --cat-activity:#B49AC0;
+    --cat-other:#9E9E97;
+    --shadow:none;
   }
 
-  @media (max-width: 600px) {
-    .groups-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .group-card { padding: 14px 12px; }
-    table { font-size: 0.74rem; }
-    th, td { padding: 5px 3px; }
-    th:first-child, td:first-child { padding-left: 0; }
-    col.col-wdl, th.col-wdl, td.col-wdl { display: none; }
-    td.team-name .flag, th .flag { width: 18px; height: 13px; }
-    td.team-name { gap: 4px; }
-    .form-badge { width: 18px; height: 18px; font-size: 0.6rem; }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;
+    padding:24px 16px 64px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  h1,h2,h3{text-wrap:balance;margin:0;}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  input, select, button{font-size:16px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  /* ---------- header ---------- */
+  .pass{margin-bottom:8px;}
+  .pass-top{
+    padding:0 0 16px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:12px;
+  }
+  .pass-eyebrow{
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .pass-title{
+    font-family:"IBM Plex Sans Thai",sans-serif;
+    font-weight:600;
+    font-size:clamp(21px,4vw,27px);
+    line-height:1.2;
+    color:var(--ink);
+    cursor:text;
+  }
+  .pass-title input{
+    font:inherit;
+    color:inherit;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--accent);
+    width:min(380px,100%);
+    padding:2px 0;
+  }
+  .pass-code{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    text-align:right;
+  }
+  .pass-perf{display:none;}
+  .pass-bottom{
+    padding:16px 0 4px;
+    border-top:1px solid var(--line);
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .members{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .tag{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink);
+    border-radius:999px;
+    padding:8px 14px;
+    min-height:38px;
+    font-size:14px;
+    font-weight:500;
+  }
+  .tag button{
+    background:none;border:none;cursor:pointer;color:var(--ink-soft);
+    font-size:16px;line-height:1;padding:2px;
+  }
+  .tag button:hover{color:var(--danger);}
+  .add-member{display:flex;gap:6px;}
+  .add-member input{
+    width:126px;
+    padding:8px 12px;
+    min-height:38px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .add-member button{
+    border-radius:8px;
+    border:none;
+    background:var(--accent);
+    color:var(--accent-ink);
+    padding:9px 16px;
+    min-height:38px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .hint{font-size:12.5px;color:var(--ink-soft);}
+  .link-btn{
+    background:none;border:none;cursor:pointer;
+    color:var(--accent);font-size:12.5px;font-weight:600;
+    padding:6px 0;margin-top:4px;
+  }
+  .link-btn:hover{text-decoration:underline;}
+
+  .trip-switcher{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px;
+    margin-bottom:16px;
+    background:var(--paper-2);
+  }
+  .trip-switcher-row{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:11px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:14px;
+  }
+  .trip-switcher-row:hover{background:var(--paper);}
+  .trip-switcher-row.current{background:var(--paper);font-weight:600;}
+  .trip-switcher-row .meta{font-size:12px;color:var(--ink-soft);font-weight:400;white-space:nowrap;}
+
+  /* ---------- layout ---------- */
+  .card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:20px;
+    margin-bottom:16px;
+    box-shadow:none;
+  }
+  .card h2{
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .card + .card{margin-top:0;}
+
+  /* ---------- form ---------- */
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+  .field label{font-size:12.5px;color:var(--ink-soft);font-weight:500;}
+  .field input, .field select{
+    padding:12px 13px;
+    min-height:46px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .cats{display:flex;flex-wrap:wrap;gap:8px;}
+  .cat-btn{
+    display:flex;align-items:center;gap:7px;
+    border:1px solid var(--line);
+    background:none;
+    border-radius:8px;
+    padding:10px 14px;
+    min-height:44px;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .cat-btn .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .cat-btn.active{border-color:var(--ink);background:var(--ink);color:var(--paper-2);font-weight:600;}
+  .split-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .split-chip{
+    display:flex;align-items:center;gap:7px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 14px;
+    min-height:44px;
+    font-size:14.5px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .split-chip input{margin:0;width:18px;height:18px;accent-color:var(--accent);}
+  .form-actions{display:flex;gap:10px;margin-top:4px;}
+  .btn-primary{
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    border-radius:8px;
+    padding:14px 22px;
+    min-height:50px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    flex:1;
+  }
+  .btn-ghost{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink);
+    border-radius:8px;
+    padding:14px 20px;
+    min-height:50px;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+  }
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-primary:active{filter:brightness(0.94);}
+
+  /* ---------- expense list ---------- */
+  .date-heading{
+    font-size:12px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin:18px 0 8px;
+  }
+  .date-heading:first-child{margin-top:0;}
+  .expense{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--paper-2);
+    margin-bottom:8px;
+  }
+  .expense-main{flex:1;min-width:0;}
+  .expense-desc{font-weight:600;font-size:14.5px;position:relative;padding-left:14px;}
+  .expense-desc::before{
+    content:"";
+    position:absolute;left:0;top:50%;transform:translateY(-50%);
+    width:6px;height:6px;border-radius:50%;
+    background:var(--cat-color,var(--ink-soft));
+  }
+  .expense-meta{font-size:12.5px;color:var(--ink-soft);margin-top:2px;padding-left:14px;}
+  .expense-amount{font-size:15.5px;font-weight:600;white-space:nowrap;}
+  .expense-actions{display:flex;gap:2px;}
+  .icon-btn{
+    background:none;border:none;cursor:pointer;color:var(--ink-soft);
+    padding:10px;border-radius:8px;line-height:1;font-size:15px;
+    min-width:40px;min-height:40px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .icon-btn:hover{background:var(--paper);color:var(--ink);}
+  .icon-btn.danger-arm{color:var(--accent-ink);background:var(--danger);}
+  .empty-note{color:var(--ink-soft);font-size:13.5px;padding:8px 0;}
+
+  /* ---------- summary ---------- */
+  .total-figure{font-family:"IBM Plex Mono",monospace;font-size:28px;font-weight:600;letter-spacing:-.01em;}
+  .total-sub{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+  .bar-row{margin-bottom:10px;}
+  .bar-label{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px;}
+  .bar-track{height:4px;border-radius:2px;background:var(--paper);overflow:hidden;}
+  .bar-fill{height:100%;border-radius:2px;}
+  .balance-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .balance-row:last-child{border-bottom:none;}
+  .balance-amt{font-family:"IBM Plex Mono",monospace;font-weight:600;}
+  .pos{color:var(--success);}
+  .neg{color:var(--danger);}
+  .neu{color:var(--ink-soft);}
+  .settle-row{
+    display:flex;align-items:center;gap:8px;
+    padding:9px 0;border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .settle-row:last-child{border-bottom:none;}
+  .settle-arrow{color:var(--accent);font-weight:600;}
+  .settle-amt{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-weight:600;}
+
+  /* ---------- onboarding ---------- */
+  #onboarding{max-width:400px;margin:72px auto 40px;}
+  #onboarding .pass-title{font-size:22px;margin-bottom:4px;}
+  .setup-members{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+
+  .sync-note{
+    font-size:12px;color:var(--ink-soft);
+    display:flex;align-items:center;gap:6px;margin-bottom:16px;
+  }
+  .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--success);}
+  .sync-dot.off{background:var(--ink-soft);}
+
+  /* ---------- tabs ---------- */
+  .tabbar{
+    position:sticky;
+    top:0;
+    z-index:10;
+    display:flex;
+    gap:4px;
+    background:var(--paper);
+    padding:14px 0 0;
+    margin-bottom:20px;
+    border-bottom:1px solid var(--line);
+  }
+  .tab-btn{
+    flex:1;
+    display:flex;align-items:center;justify-content:center;
+    padding:12px 8px 13px;
+    min-height:48px;
+    margin-bottom:-1px;
+    border-radius:0;
+    border:none;
+    border-bottom:2px solid transparent;
+    background:none;
+    color:var(--ink-soft);
+    font-weight:500;
+    font-size:14.5px;
+    cursor:pointer;
+  }
+  .tab-btn.active{
+    color:var(--ink);
+    font-weight:600;
+    border-bottom-color:var(--accent);
   }
 
-  .bracket-wrap {
-    display: flex;
-    gap: 18px;
-    overflow-x: auto;
-    padding-bottom: 12px;
-    -webkit-overflow-scrolling: touch;
+  /* ---------- dashboard ---------- */
+  .dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px;}
+  @media (max-width:760px){.dash-grid{grid-template-columns:repeat(2,1fr);gap:20px 16px;}}
+  .dash-tile{
+    border-top:2px solid var(--line);
+    padding:12px 0 0;
   }
-  .bracket-round {
-    min-width: 230px;
-    flex: 0 0 230px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  .dash-tile .label{font-size:10.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+  .dash-tile .value{font-size:19px;font-weight:600;}
+  .dash-tile.warn{border-top-color:var(--danger);}
+  .dash-tile.warn .value{color:var(--danger);}
+  .dash-tile.good{border-top-color:var(--success);}
+  .dash-tile.good .value{color:var(--success);}
+
+  /* ---------- pool fund ---------- */
+  .pool-stats{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line);}
+  .pool-stat .label{font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+  .pool-stat .value{font-weight:600;font-size:16px;}
+  .pool-stat .value.pos{color:var(--success);}
+  .pool-stat .value.neg{color:var(--danger);}
+  .contrib-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 0;border-bottom:1px solid var(--line);
+    font-size:13.5px;
   }
-  .bracket-round h4 {
-    margin: 0;
-    color: var(--gold-bright);
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-align: center;
-    letter-spacing: 0.3px;
-  }
-  .bracket-match {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    font-size: 0.85rem;
-    box-shadow: var(--shadow);
-  }
-  .bracket-match .bm-team {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 4px 0;
-  }
-  .bracket-match .bm-team .name {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    overflow-wrap: break-word;
-  }
-  .bracket-match .bm-team .score {
-    font-weight: 600;
-    color: var(--muted);
-    min-width: 18px;
-    text-align: right;
-  }
-  .bracket-match .bm-team.winner {
-    color: var(--text);
-    font-weight: 600;
-  }
-  .bracket-match .bm-team.winner .score {
-    color: var(--gold-bright);
-  }
-  .bracket-match .bm-meta {
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin-top: 6px;
-    border-top: 1px solid var(--card-border);
-    padding-top: 6px;
+  .contrib-row:last-child{border-bottom:none;}
+  .contrib-right{display:flex;align-items:center;gap:6px;}
+  .pool-badge{
+    display:inline-block;
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    font-size:10.5px;
+    font-weight:600;
+    padding:1px 8px;
+    border-radius:999px;
+    margin-left:7px;
+    vertical-align:middle;
   }
 
-  .form-badges {
-    display: flex;
-    gap: 4px;
-    justify-content: center;
-  }
-  .form-badge {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.68rem;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-  .form-badge.W { background: var(--qualify); border: 1px solid var(--qualify-border); color: var(--text); }
-  .form-badge.D { background: var(--card); border: 1px solid var(--card-border); color: var(--muted); }
-  .form-badge.L { background: var(--out); border: 1px solid var(--out-border); color: var(--text); }
-
-  #favoritesBody tr:nth-child(-n+5) {
-    background: var(--gold-soft);
-  }
-  #favoritesBody td.rank {
-    font-weight: 700;
-    color: var(--gold-bright);
-  }
-
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    font-size: 0.82rem;
-    margin-bottom: 18px;
-    color: var(--muted);
-  }
-  .legend span { display: flex; align-items: center; gap: 8px; }
-  .legend .box { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
-  .box.qualify { background: var(--qualify); border: 1px solid var(--qualify-border); }
-  .box.maybe { background: var(--maybe); border: 1px solid var(--maybe-border); }
-  .box.out { background: var(--out); border: 1px solid var(--out-border); }
-
-  .note {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-left: 4px solid var(--gold);
-    padding: 14px 18px;
-    margin-bottom: 22px;
-    font-size: 0.9rem;
-    border-radius: var(--radius-sm);
-    color: var(--muted);
-    line-height: 1.9;
-  }
-  .note b { color: var(--text); }
-
-  #tab-qualified h3, #tab-teams h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--gold-bright);
-    margin: 26px 0 12px;
-  }
-
-  .qualified-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .qualified-item {
-    background: var(--qualify);
-    border: 1px solid var(--qualify-border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: transform 0.15s ease;
-  }
-  .qualified-item:hover { transform: translateY(-2px); }
-  .qualified-item.maybe { background: var(--maybe); border-color: var(--maybe-border); }
-
-  #teamSchedule .match-card { flex-direction: row; }
-  .team-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    font-size: 1.3rem;
-    margin: 4px 0 22px;
-    font-weight: 600;
-    color: var(--text);
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    padding: 16px 22px;
-    box-shadow: var(--shadow);
-  }
-  .team-header .flag { width: 40px; height: 30px; border-radius: 4px; }
-
-  .error-banner {
-    background: var(--out);
-    border: 1px solid var(--out-border);
-    color: var(--text);
-    padding: 12px 18px;
-    margin: 14px auto;
-    max-width: 1140px;
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-  }
-
-  footer {
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.78rem;
-    padding: 30px 20px 50px;
-    border-top: 1px solid var(--card-border);
-    margin-top: 24px;
-  }
+  [hidden]{display:none!important;}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<header class="topbar">
-  <h1>⚽ ฟุตบอลโลก 2026<span class="sub">ตารางการแข่งขัน ผลการแข่งขัน และทีมผ่านเข้ารอบ • เวลาประเทศไทย</span></h1>
-  <div class="meta">
-    <span id="lastUpdated">กำลังโหลดข้อมูล...</span>
-    <button id="refreshBtn">รีเฟรช</button>
-  </div>
-</header>
-
-<nav class="tabs">
-  <button class="tab-btn active" data-tab="schedule">📅 ตารางการแข่งขัน</button>
-  <button class="tab-btn" data-tab="standings">🏆 ตารางคะแนนกลุ่ม</button>
-  <button class="tab-btn" data-tab="favorites">📊 สถิติทีมเต็ง</button>
-  <button class="tab-btn" data-tab="bracket">🏟️ สายน็อกเอาท์</button>
-  <button class="tab-btn" data-tab="scorers">👟 ดาวซัลโว</button>
-  <button class="tab-btn" data-tab="qualified">✅ สรุปทีมผ่านเข้ารอบ</button>
-  <button class="tab-btn" data-tab="teams">🔍 ตารางแข่งรายทีม</button>
-</nav>
-
-<div id="errorBanner" class="error-banner" hidden></div>
-
-<section id="todaySection" class="today-section" hidden>
-  <div class="today-heading">
-    📍 การแข่งขันวันนี้ • <span id="todayDate"></span>
-    <span class="badge" id="todayLiveBadge" hidden>กำลังแข่งสด</span>
-  </div>
-  <div id="todayMatches"></div>
-</section>
-
-<main>
-  <section id="tab-schedule" class="tab-content active">
-    <div class="filters">
-      <select id="scheduleFilter">
-        <option value="all">ทุกคู่การแข่งขัน</option>
-      </select>
-      <label><input type="checkbox" id="liveOnly"> แสดงเฉพาะนัดที่กำลังแข่งสด</label>
-    </div>
-    <div id="scheduleList"></div>
-  </section>
-
-  <section id="tab-standings" class="tab-content">
-    <div class="legend">
-      <span><span class="box qualify"></span> อันดับ 1-2: ผ่านเข้ารอบ 32 ทีมโดยตรง</span>
-      <span><span class="box maybe"></span> อันดับ 3: ลุ้นเป็น 8 อันดับ 3 ที่ดีที่สุด</span>
-      <span><span class="box out"></span> อันดับ 4: ตกรอบ</span>
-    </div>
-    <div id="standingsGrid" class="groups-grid"></div>
-  </section>
-
-  <section id="tab-favorites" class="tab-content">
-    <div class="note" id="favoritesEmpty" hidden>
-      ยังไม่มีผลการแข่งขันที่จบลง สถิติทีมเต็งจะแสดงหลังจากมีผลการแข่งขันในรอบแบ่งกลุ่ม
-    </div>
-    <div class="note" id="favoritesNote" hidden>
-      จัดอันดับทุกทีมข้ามกลุ่มตาม <b>คะแนน</b>, <b>ผลต่างประตู</b> และ <b>ประตูที่ทำได้</b> เพื่อประเมิน "ทีมเต็ง" (5 อันดับแรกไฮไลต์สีทอง)
-      คอลัมน์ <b>ฟอร์ม</b> แสดงผล 5 นัดหลังสุด (ซ้าย = เก่าสุด, ขวา = ล่าสุด)
-    </div>
-    <div id="favoritesTableWrap" class="table-wrap" hidden>
-      <table>
-        <colgroup>
-          <col><col class="col-team"><col>
-          <col><col class="col-wdl"><col class="col-wdl"><col class="col-wdl">
-          <col class="col-gfga"><col class="col-gfga">
-          <col><col><col>
-        </colgroup>
-        <thead>
-          <tr>
-            <th>#</th><th style="text-align:left">ทีม</th><th title="กลุ่ม">กลุ่ม</th><th title="ลงเล่น">แข่ง</th>
-            <th class="col-wdl" title="ชนะ">ชนะ</th><th class="col-wdl" title="เสมอ">เสมอ</th><th class="col-wdl" title="แพ้">แพ้</th>
-            <th class="col-gfga" title="ประตูได้">ยิง</th><th class="col-gfga" title="ประตูเสีย">เสีย</th>
-            <th title="ผลต่างประตู">+/-</th><th title="คะแนน">คะแนน</th><th title="5 นัดหลังสุด">ฟอร์ม</th>
-          </tr>
-        </thead>
-        <tbody id="favoritesBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="tab-bracket" class="tab-content">
-    <div class="note" id="bracketEmpty" hidden>
-      ยังไม่มีการประกาศโปรแกรมรอบน็อกเอาท์ จะแสดงผลที่นี่หลังจากรอบแบ่งกลุ่มสิ้นสุดและทราบคู่แข่งแล้ว
-    </div>
-    <div id="bracketWrap" class="bracket-wrap"></div>
-  </section>
-
-  <section id="tab-scorers" class="tab-content">
-    <div class="note" id="scorersEmpty" hidden>
-      ยังไม่มีข้อมูลผู้ทำประตู ข้อมูลจะปรากฏหลังจากแต่ละนัดแข่งจบลง
-    </div>
-    <div id="scorersTableWrap" class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th style="text-align:left">นักเตะ</th>
-            <th style="text-align:left">ทีม</th>
-            <th title="ประตูรวม">ประตู</th>
-          </tr>
-        </thead>
-        <tbody id="scorersBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section id="tab-qualified" class="tab-content">
-    <div id="qualifiedContent"></div>
-  </section>
-
-  <section id="tab-teams" class="tab-content">
-    <div class="filters">
-      <select id="teamSelect">
-        <option value="">-- เลือกทีม --</option>
-      </select>
-    </div>
-    <div id="teamSchedule"></div>
-  </section>
-</main>
-
-<footer>
-  ข้อมูลตารางแข่ง/ผลการแข่งขันจาก TheSportsDB • เวลาทั้งหมดแสดงผลเป็นเวลาประเทศไทย (UTC+7)<br>
-  ข้อมูลอาจล่าช้าหรือไม่สมบูรณ์สำหรับคู่ในรอบน็อกเอาท์ที่ยังไม่ทราบทีมผู้เข้ารอบ
-</footer>
-
-<script>
-const API_BASE = 'https://www.thesportsdb.com/api/v1/json/3';
-const LEAGUE_ID = 4429;
-const SEASON = '2026';
-const MAX_ROUND = 12;
-const CACHE_KEY = 'wc2026_matches_v1';
-const CACHE_TTL_MS = 3 * 60 * 1000;
-const GOALS_CACHE_KEY = 'wc2026_goals_v1';
-const GOAL_FETCH_DELAY_MS = 300;
-const TOURNAMENT_START = '2026-06-11';
-const TOURNAMENT_END = '2026-07-19';
-const DAY_FETCH_BATCH_SIZE = 6;
-const DAY_FETCH_DELAY_MS = 250;
-
-const STATUS_TH = {
-  'NS': 'ยังไม่เริ่ม',
-  '1H': 'ครึ่งแรก',
-  'HT': 'พักครึ่ง',
-  '2H': 'ครึ่งหลัง',
-  'ET': 'ต่อเวลาพิเศษ',
-  'BT': 'พักก่อนต่อเวลา',
-  'P': 'จุดโทษ',
-  'FT': 'จบการแข่งขัน',
-  'AET': 'จบ (ต่อเวลาพิเศษ)',
-  'PEN': 'จบ (จุดโทษ)',
-  'PST': 'เลื่อนการแข่งขัน',
-  'CANC': 'ยกเลิก',
-  'ABD': 'ยุติการแข่งขัน',
-  'SUSP': 'หยุดการแข่งขันชั่วคราว',
-  'TBD': 'รอประกาศ',
-  '': 'รอประกาศ'
-};
-const LIVE_STATUSES = new Set(['1H', 'HT', '2H', 'ET', 'BT', 'P']);
-const FINISHED_STATUSES = new Set(['FT', 'AET', 'PEN']);
-
-const FLAG_CODES = {
-  'Mexico': 'mx', 'South Africa': 'za', 'South Korea': 'kr', 'Czech Republic': 'cz',
-  'Canada': 'ca', 'Bosnia-Herzegovina': 'ba', 'USA': 'us', 'Paraguay': 'py',
-  'Brazil': 'br', 'Morocco': 'ma', 'Qatar': 'qa', 'Switzerland': 'ch',
-  'Haiti': 'ht', 'Scotland': 'gb-sct', 'Germany': 'de', 'Curaçao': 'cw', 'Curacao': 'cw',
-  'Ivory Coast': 'ci', "Côte d'Ivoire": 'ci', 'Ecuador': 'ec', 'Netherlands': 'nl',
-  'Japan': 'jp', 'Australia': 'au', 'Turkey': 'tr', 'Türkiye': 'tr', 'Belgium': 'be',
-  'Egypt': 'eg', 'Saudi Arabia': 'sa', 'Uruguay': 'uy', 'Spain': 'es',
-  'Cape Verde': 'cv', 'Sweden': 'se', 'Tunisia': 'tn', 'Iran': 'ir',
-  'New Zealand': 'nz', 'France': 'fr', 'Senegal': 'sn', 'Iraq': 'iq',
-  'Norway': 'no', 'Argentina': 'ar', 'Algeria': 'dz', 'Austria': 'at',
-  'Jordan': 'jo', 'England': 'gb-eng', 'Croatia': 'hr', 'Ghana': 'gh',
-  'Panama': 'pa', 'Portugal': 'pt', 'DR Congo': 'cd', 'Uzbekistan': 'uz',
-  'Colombia': 'co'
-};
-
-const THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-const THAI_DAYS = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
-
-let allMatches = [];
-let roundLabels = {};
-let goalsCache = {};
-
-function pad(n) { return String(n).padStart(2, '0'); }
-
-function flagImg(team) {
-  const code = FLAG_CODES[team];
-  if (!code) return '';
-  return `<img class="flag" src="https://flagcdn.com/24x18/${code}.png" srcset="https://flagcdn.com/48x36/${code}.png 2x" alt="${team}" loading="lazy">`;
-}
-
-function toBangkok(dateEvent, strTime) {
-  const time = strTime || '00:00:00';
-  const utcMs = Date.parse(`${dateEvent}T${time}Z`);
-  const bkk = new Date(utcMs + 7 * 3600 * 1000);
-  return {
-    year: bkk.getUTCFullYear(),
-    month: bkk.getUTCMonth(),
-    day: bkk.getUTCDate(),
-    hour: bkk.getUTCHours(),
-    minute: bkk.getUTCMinutes(),
-    weekday: bkk.getUTCDay(),
-    dateKey: `${bkk.getUTCFullYear()}-${pad(bkk.getUTCMonth() + 1)}-${pad(bkk.getUTCDate())}`,
-    sortMs: utcMs
-  };
-}
-
-function formatDateHeading(b) {
-  return `วัน${THAI_DAYS[b.weekday]}ที่ ${b.day} ${THAI_MONTHS[b.month]} ${b.year}`;
-}
-
-function getTodayDateKey() {
-  const now = new Date();
-  const bkk = new Date(now.getTime() + 7 * 3600 * 1000);
-  return `${bkk.getUTCFullYear()}-${pad(bkk.getUTCMonth() + 1)}-${pad(bkk.getUTCDate())}`;
-}
-
-function formatTime(b) {
-  return `${pad(b.hour)}:${pad(b.minute)}`;
-}
-
-// ---------- Data loading ----------
-
-async function fetchRound(r) {
-  const res = await fetch(`${API_BASE}/eventsround.php?id=${LEAGUE_ID}&r=${r}&s=${SEASON}`);
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const json = await res.json();
-  return json.events || [];
-}
-
-async function fetchDay(dateStr) {
-  const res = await fetch(`${API_BASE}/eventsday.php?d=${dateStr}&l=${LEAGUE_ID}`);
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const json = await res.json();
-  return json.events || [];
-}
-
-function tournamentDates() {
-  const dates = [];
-  const cur = new Date(`${TOURNAMENT_START}T00:00:00Z`);
-  const end = new Date(`${TOURNAMENT_END}T00:00:00Z`);
-  while (cur <= end) {
-    dates.push(cur.toISOString().slice(0, 10));
-    cur.setUTCDate(cur.getUTCDate() + 1);
-  }
-  return dates;
-}
-
-async function fetchAllDays() {
-  const dates = tournamentDates();
-  const out = [];
-  for (let i = 0; i < dates.length; i += DAY_FETCH_BATCH_SIZE) {
-    const batch = dates.slice(i, i + DAY_FETCH_BATCH_SIZE);
-    const results = await Promise.all(batch.map(d => fetchDay(d).catch(() => [])));
-    out.push(...results.flat());
-    if (i + DAY_FETCH_BATCH_SIZE < dates.length) {
-      await new Promise(r => setTimeout(r, DAY_FETCH_DELAY_MS));
-    }
-  }
-  return out;
-}
-
-async function fetchAllMatches() {
-  // eventsround.php and eventsday.php each truncate results on the free API key,
-  // so combine both and dedupe by idEvent to maximize coverage.
-  const [roundResults, dayResults] = await Promise.all([
-    Promise.all(Array.from({ length: MAX_ROUND }, (_, i) => fetchRound(i + 1).catch(() => []))),
-    fetchAllDays()
-  ]);
-  const merged = new Map();
-  [...roundResults.flat(), ...dayResults].forEach(m => {
-    if (m && m.idEvent) merged.set(m.idEvent, m);
-  });
-  const matches = Array.from(merged.values());
-  if (!matches.length) throw new Error('no data');
-  return matches;
-}
-
-function readCache() {
-  try {
-    const raw = localStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (e) {
-    return null;
-  }
-}
-
-function writeCache(data) {
-  try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() }));
-  } catch (e) {}
-}
-
-async function loadMatches(force) {
-  const cached = readCache();
-  if (!force && cached && Date.now() - cached.ts < CACHE_TTL_MS) {
-    return cached.data;
-  }
-  try {
-    const data = await fetchAllMatches();
-    writeCache(data);
-    showError(null);
-    return data;
-  } catch (e) {
-    if (cached) {
-      showError('ไม่สามารถโหลดข้อมูลล่าสุดได้ กำลังแสดงข้อมูลที่บันทึกไว้ล่าสุด (' + new Date(cached.ts).toLocaleString('th-TH') + ')');
-      return cached.data;
-    }
-    showError('ไม่สามารถโหลดข้อมูลได้ หากเปิดไฟล์นี้โดยตรง (file://) เบราว์เซอร์อาจบล็อกการเรียก API โปรดเปิดผ่านเว็บเซิร์ฟเวอร์ในเครื่อง (เช่น "npx serve ." หรือ Live Server) แล้วลองรีเฟรชอีกครั้ง');
-    return [];
-  }
-}
-
-function showError(msg) {
-  const el = document.getElementById('errorBanner');
-  if (!msg) { el.hidden = true; return; }
-  el.hidden = false;
-  el.textContent = msg;
-}
-
-// ---------- Round labels (knockout stage naming) ----------
-
-function computeRoundLabels(matches) {
-  const koByRound = {};
-  matches.forEach(m => {
-    if (!/^[A-Z]$/.test(m.strGroup || '')) {
-      (koByRound[m.intRound] = koByRound[m.intRound] || []).push(m);
-    }
-  });
-  const labels = {};
-  const singleRounds = [];
-  Object.entries(koByRound).forEach(([round, ms]) => {
-    const count = ms.length;
-    if (count >= 16) labels[round] = 'รอบ 32 ทีมสุดท้าย';
-    else if (count >= 8) labels[round] = 'รอบ 16 ทีมสุดท้าย';
-    else if (count >= 4) labels[round] = 'รอบก่อนรองชนะเลิศ';
-    else if (count >= 2) labels[round] = 'รอบรองชนะเลิศ';
-    else singleRounds.push(round);
-  });
-  if (singleRounds.length) {
-    const sorted = singleRounds.sort((a, b) => {
-      const da = Math.min(...koByRound[a].map(m => toBangkok(m.dateEvent, m.strTime).sortMs));
-      const db = Math.min(...koByRound[b].map(m => toBangkok(m.dateEvent, m.strTime).sortMs));
-      return da - db;
-    });
-    if (sorted.length === 1) {
-      labels[sorted[0]] = 'นัดชิงชนะเลิศ';
-    } else {
-      labels[sorted[0]] = 'นัดชิงอันดับที่ 3';
-      labels[sorted[sorted.length - 1]] = 'นัดชิงชนะเลิศ';
-    }
-  }
-  return labels;
-}
-
-function getMatchLabel(m) {
-  if (/^[A-Z]$/.test(m.strGroup || '')) {
-    return `รอบแบ่งกลุ่ม กลุ่ม ${m.strGroup} • นัดที่ ${m.intRound}`;
-  }
-  return roundLabels[m.intRound] || `รอบที่ ${m.intRound}`;
-}
-
-// ---------- Standings ----------
-
-function getGroupLetters(matches) {
-  const set = new Set();
-  matches.forEach(m => { if (/^[A-Z]$/.test(m.strGroup || '')) set.add(m.strGroup); });
-  return Array.from(set).sort();
-}
-
-function computeStandings(matches) {
-  const groups = {};
-  matches.forEach(m => {
-    const g = m.strGroup;
-    if (!/^[A-Z]$/.test(g || '')) return;
-    groups[g] = groups[g] || {};
-    [m.strHomeTeam, m.strAwayTeam].forEach(t => {
-      if (!groups[g][t]) {
-        groups[g][t] = { team: t, P: 0, W: 0, D: 0, L: 0, GF: 0, GA: 0, GD: 0, Pts: 0 };
-      }
-    });
-    if (FINISHED_STATUSES.has(m.strStatus) && m.intHomeScore !== null && m.intAwayScore !== null) {
-      const hs = parseInt(m.intHomeScore, 10);
-      const as = parseInt(m.intAwayScore, 10);
-      const home = groups[g][m.strHomeTeam];
-      const away = groups[g][m.strAwayTeam];
-      home.P++; away.P++;
-      home.GF += hs; home.GA += as;
-      away.GF += as; away.GA += hs;
-      if (hs > as) { home.W++; home.Pts += 3; away.L++; }
-      else if (hs < as) { away.W++; away.Pts += 3; home.L++; }
-      else { home.D++; away.D++; home.Pts++; away.Pts++; }
-    }
-  });
-  Object.keys(groups).forEach(g => {
-    Object.values(groups[g]).forEach(t => { t.GD = t.GF - t.GA; });
-    groups[g] = Object.values(groups[g]).sort((a, b) =>
-      b.Pts - a.Pts || b.GD - a.GD || b.GF - a.GF || a.team.localeCompare(b.team)
-    );
-  });
-  return groups;
-}
-
-// ---------- Rendering: schedule ----------
-
-function renderScheduleFilters() {
-  const sel = document.getElementById('scheduleFilter');
-  sel.innerHTML = '<option value="all">ทุกคู่การแข่งขัน</option>';
-  const groupLetters = getGroupLetters(allMatches);
-  if (groupLetters.length) {
-    const optgroup = document.createElement('optgroup');
-    optgroup.label = 'รอบแบ่งกลุ่ม';
-    groupLetters.forEach(g => {
-      const opt = document.createElement('option');
-      opt.value = 'group-' + g;
-      opt.textContent = 'กลุ่ม ' + g;
-      optgroup.appendChild(opt);
-    });
-    sel.appendChild(optgroup);
-  }
-  const koLabels = Array.from(new Set(Object.values(roundLabels)));
-  if (koLabels.length) {
-    const optgroup = document.createElement('optgroup');
-    optgroup.label = 'รอบน็อกเอาท์';
-    koLabels.forEach(label => {
-      const opt = document.createElement('option');
-      opt.value = 'ko-' + label;
-      opt.textContent = label;
-      optgroup.appendChild(opt);
-    });
-    sel.appendChild(optgroup);
-  }
-}
-
-function matchPassesFilter(m, filterVal, liveOnly) {
-  if (liveOnly && !LIVE_STATUSES.has(m.strStatus)) return false;
-  if (filterVal === 'all') return true;
-  if (filterVal.startsWith('group-')) {
-    return m.strGroup === filterVal.slice(6);
-  }
-  if (filterVal.startsWith('ko-')) {
-    return getMatchLabel(m) === filterVal.slice(3);
-  }
-  return true;
-}
-
-function renderMatchCard(m) {
-  const b = toBangkok(m.dateEvent, m.strTime);
-  const status = m.strStatus || 'NS';
-  const isLive = LIVE_STATUSES.has(status);
-  const isFinished = FINISHED_STATUSES.has(status);
-  const hasScore = m.intHomeScore !== null && m.intAwayScore !== null && (isLive || isFinished);
-  const scoreText = hasScore ? `${m.intHomeScore} - ${m.intAwayScore}` : 'VS';
-
-  const div = document.createElement('div');
-  div.className = 'match-card';
-  div.innerHTML = `
-    <div class="match-time">${formatTime(b)}</div>
-    <div class="match-teams">
-      <div class="team home"><span>${m.strHomeTeam}</span>${flagImg(m.strHomeTeam)}</div>
-      <div class="score">${scoreText}</div>
-      <div class="team away">${flagImg(m.strAwayTeam)}<span>${m.strAwayTeam}</span></div>
-    </div>
-    <div class="match-status ${isLive ? 'live' : ''}">${isLive ? '<span class="live-dot"></span>' : ''}${STATUS_TH[status] || status}</div>
-    <div class="match-meta">${getMatchLabel(m)} • ${m.strVenue || ''}${m.strCity ? ' (' + m.strCity + ')' : ''}</div>
-  `;
-  return div;
-}
-
-function renderSchedule() {
-  const list = document.getElementById('scheduleList');
-  list.innerHTML = '';
-  const filterVal = document.getElementById('scheduleFilter').value;
-  const liveOnly = document.getElementById('liveOnly').checked;
-
-  const filtered = allMatches
-    .map(m => ({ m, b: toBangkok(m.dateEvent, m.strTime) }))
-    .filter(({ m }) => matchPassesFilter(m, filterVal, liveOnly))
-    .sort((a, b) => a.b.sortMs - b.b.sortMs);
-
-  if (!filtered.length) {
-    list.innerHTML = '<p>ไม่พบคู่การแข่งขันตามเงื่อนไขที่เลือก</p>';
-    return;
-  }
-
-  let lastDateKey = null;
-  filtered.forEach(({ m, b }) => {
-    if (b.dateKey !== lastDateKey) {
-      const h = document.createElement('div');
-      h.className = 'date-heading';
-      h.textContent = formatDateHeading(b);
-      list.appendChild(h);
-      lastDateKey = b.dateKey;
-    }
-    list.appendChild(renderMatchCard(m));
-  });
-}
-
-// ---------- Rendering: today's matches ----------
-
-function renderToday() {
-  const section = document.getElementById('todaySection');
-  const list = document.getElementById('todayMatches');
-  const dateEl = document.getElementById('todayDate');
-  const liveBadge = document.getElementById('todayLiveBadge');
-  list.innerHTML = '';
-
-  const todayKey = getTodayDateKey();
-  const todays = allMatches
-    .map(m => ({ m, b: toBangkok(m.dateEvent, m.strTime) }))
-    .filter(({ b }) => b.dateKey === todayKey)
-    .sort((a, b) => a.b.sortMs - b.b.sortMs);
-
-  if (!todays.length) {
-    section.hidden = true;
-    return;
-  }
-
-  section.hidden = false;
-  dateEl.textContent = formatDateHeading(todays[0].b);
-  liveBadge.hidden = !todays.some(({ m }) => LIVE_STATUSES.has(m.strStatus || 'NS'));
-  todays.forEach(({ m }) => list.appendChild(renderMatchCard(m)));
-}
-
-// ---------- Rendering: standings ----------
-
-function renderStandings() {
-  const grid = document.getElementById('standingsGrid');
-  grid.innerHTML = '';
-  const groups = computeStandings(allMatches);
-  const letters = Object.keys(groups).sort();
-
-  if (!letters.length) {
-    grid.innerHTML = '<p>ยังไม่มีข้อมูลตารางคะแนน</p>';
-    return;
-  }
-
-  letters.forEach(g => {
-    const card = document.createElement('div');
-    card.className = 'group-card';
-    const rows = groups[g].map((t, idx) => `
-      <tr class="rank-${idx + 1}">
-        <td>${idx + 1}</td>
-        <td class="team-name">${flagImg(t.team)} <span class="team-full">${t.team}</span></td>
-        <td>${t.P}</td>
-        <td class="col-wdl">${t.W}</td>
-        <td class="col-wdl">${t.D}</td>
-        <td class="col-wdl">${t.L}</td>
-        <td class="col-gfga">${t.GF}</td>
-        <td class="col-gfga">${t.GA}</td>
-        <td>${t.GD}</td>
-        <td><b>${t.Pts}</b></td>
-      </tr>
-    `).join('');
-    card.innerHTML = `
-      <h3>กลุ่ม ${g}</h3>
-      <div class="table-wrap">
-      <table>
-        <colgroup>
-          <col><col class="col-team"><col>
-          <col class="col-wdl"><col class="col-wdl"><col class="col-wdl">
-          <col class="col-gfga"><col class="col-gfga">
-          <col><col>
-        </colgroup>
-        <thead>
-          <tr>
-            <th>#</th><th style="text-align:left">ทีม</th><th title="ลงเล่น">แข่ง</th>
-            <th class="col-wdl" title="ชนะ">ชนะ</th><th class="col-wdl" title="เสมอ">เสมอ</th><th class="col-wdl" title="แพ้">แพ้</th>
-            <th class="col-gfga" title="ประตูได้">ยิง</th><th class="col-gfga" title="ประตูเสีย">เสีย</th>
-            <th title="ผลต่างประตู">+/-</th><th title="คะแนน">คะแนน</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
+  <div id="onboarding">
+    <div class="pass">
+      <div class="pass-top">
+        <div>
+          <div class="pass-eyebrow">เริ่มทริปใหม่</div>
+          <div class="pass-title">สมุดบัญชีทริป</div>
+        </div>
       </div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-// ---------- Rendering: favorite teams / stats ----------
-
-function computeOverallStandings(matches) {
-  const groups = computeStandings(matches);
-  const all = [];
-  Object.keys(groups).forEach(g => {
-    groups[g].forEach(t => all.push({ ...t, group: g }));
-  });
-  all.sort((a, b) => b.Pts - a.Pts || b.GD - a.GD || b.GF - a.GF || a.team.localeCompare(b.team));
-  return all;
-}
-
-function computeForm(matches, team) {
-  return matches
-    .filter(m => FINISHED_STATUSES.has(m.strStatus) && (m.strHomeTeam === team || m.strAwayTeam === team))
-    .map(m => ({ m, b: toBangkok(m.dateEvent, m.strTime) }))
-    .sort((a, b) => a.b.sortMs - b.b.sortMs)
-    .slice(-5)
-    .map(({ m }) => {
-      const isHome = m.strHomeTeam === team;
-      const hs = parseInt(m.intHomeScore, 10);
-      const as = parseInt(m.intAwayScore, 10);
-      const own = isHome ? hs : as;
-      const opp = isHome ? as : hs;
-      if (own > opp) return 'W';
-      if (own < opp) return 'L';
-      return 'D';
-    });
-}
-
-function renderFavorites() {
-  const tbody = document.getElementById('favoritesBody');
-  const tableWrap = document.getElementById('favoritesTableWrap');
-  const note = document.getElementById('favoritesNote');
-  const empty = document.getElementById('favoritesEmpty');
-  tbody.innerHTML = '';
-
-  const overall = computeOverallStandings(allMatches).filter(t => t.P > 0);
-  if (!overall.length) {
-    tableWrap.hidden = true;
-    note.hidden = true;
-    empty.hidden = false;
-    return;
-  }
-  empty.hidden = true;
-  note.hidden = false;
-  tableWrap.hidden = false;
-
-  overall.forEach((t, idx) => {
-    const form = computeForm(allMatches, t.team);
-    const formHtml = form.length
-      ? form.map(r => `<span class="form-badge ${r}">${r}</span>`).join('')
-      : '<span style="color:var(--muted)">-</span>';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="rank">${idx + 1}</td>
-      <td class="team-name">${flagImg(t.team)} <span class="team-full">${t.team}</span></td>
-      <td>${t.group}</td>
-      <td>${t.P}</td>
-      <td class="col-wdl">${t.W}</td>
-      <td class="col-wdl">${t.D}</td>
-      <td class="col-wdl">${t.L}</td>
-      <td class="col-gfga">${t.GF}</td>
-      <td class="col-gfga">${t.GA}</td>
-      <td>${t.GD}</td>
-      <td><b>${t.Pts}</b></td>
-      <td><div class="form-badges">${formHtml}</div></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// ---------- Rendering: knockout bracket ----------
-
-const BRACKET_ORDER = [
-  'รอบ 32 ทีมสุดท้าย', 'รอบ 16 ทีมสุดท้าย', 'รอบก่อนรองชนะเลิศ',
-  'รอบรองชนะเลิศ', 'นัดชิงอันดับที่ 3', 'นัดชิงชนะเลิศ'
-];
-
-function renderBracketMatch(m, b) {
-  const status = m.strStatus || 'NS';
-  const isLive = LIVE_STATUSES.has(status);
-  const isFinished = FINISHED_STATUSES.has(status);
-  const hasScore = m.intHomeScore !== null && m.intAwayScore !== null && (isLive || isFinished);
-  const hs = hasScore ? parseInt(m.intHomeScore, 10) : null;
-  const as = hasScore ? parseInt(m.intAwayScore, 10) : null;
-  const homeWin = hasScore && hs > as;
-  const awayWin = hasScore && as > hs;
-
-  const div = document.createElement('div');
-  div.className = 'bracket-match';
-  div.innerHTML = `
-    <div class="bm-team ${homeWin ? 'winner' : ''}">
-      <span class="name">${flagImg(m.strHomeTeam)} ${m.strHomeTeam || 'รอประกาศ'}</span>
-      <span class="score">${hasScore ? hs : '-'}</span>
+      <div class="pass-perf"></div>
+      <div class="pass-bottom" style="display:block;">
+        <div class="field">
+          <label for="setupName">ชื่อทริป</label>
+          <input id="setupName" type="text" placeholder="เช่น ทริปเขาใหญ่ 2569" />
+        </div>
+        <div class="field">
+          <label for="setupMemberInput">สมาชิกในกลุ่ม (เพิ่มทีละคน)</label>
+          <div class="add-member">
+            <input id="setupMemberInput" type="text" placeholder="ชื่อเพื่อน" />
+            <button id="setupAddMemberBtn" type="button">เพิ่ม</button>
+          </div>
+          <div class="setup-members" id="setupMembers"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" id="setupStartBtn" type="button">เริ่มบันทึกทริป</button>
+          <button class="btn-ghost" id="setupCancelBtn" type="button" hidden>ยกเลิก</button>
+        </div>
+        <p class="hint" style="margin-top:10px;">แชร์ลิงก์นี้ให้เพื่อนในกลุ่ม ทุกคนจะเห็นรายจ่ายและยอดหารอัปเดตพร้อมกันแบบเรียลไทม์ ไม่ต้องมีบัญชีอะไรเลย</p>
+      </div>
     </div>
-    <div class="bm-team ${awayWin ? 'winner' : ''}">
-      <span class="name">${flagImg(m.strAwayTeam)} ${m.strAwayTeam || 'รอประกาศ'}</span>
-      <span class="score">${hasScore ? as : '-'}</span>
+  </div>
+
+  <div id="app" hidden>
+    <div class="sync-note"><span class="sync-dot" id="syncDot"></span><span id="syncText">กำลังเชื่อมต่อ...</span></div>
+
+    <div class="pass">
+      <div class="pass-top">
+        <div>
+          <div class="pass-eyebrow" id="tripEyebrow">ทริปกลุ่ม</div>
+          <div class="pass-title" id="tripTitleView"></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="pass-code" id="tripCode"></div>
+          <button type="button" id="switchTripBtn" class="link-btn">เปลี่ยนทริป</button>
+        </div>
+      </div>
+      <div class="pass-perf"></div>
+      <div class="pass-bottom">
+        <div class="members" id="memberChips"></div>
+        <div class="add-member">
+          <input id="memberInput" type="text" placeholder="เพิ่มสมาชิก" />
+          <button id="addMemberBtn" type="button">เพิ่ม</button>
+        </div>
+      </div>
     </div>
-    <div class="bm-meta">${formatDateHeading(b)} • ${formatTime(b)} น. • ${STATUS_TH[status] || status}</div>
-  `;
-  return div;
-}
 
-function renderBracket() {
-  const wrap = document.getElementById('bracketWrap');
-  const empty = document.getElementById('bracketEmpty');
-  wrap.innerHTML = '';
+    <div class="trip-switcher" id="tripSwitcherPanel" hidden>
+      <div id="tripSwitcherList"></div>
+      <button type="button" class="btn-ghost" id="newTripBtn" style="width:100%;margin-top:4px;">+ สร้างทริปใหม่</button>
+    </div>
 
-  const koMatches = allMatches.filter(m => !/^[A-Z]$/.test(m.strGroup || ''));
-  if (!koMatches.length) {
-    empty.hidden = false;
-    return;
+    <div class="tabbar" id="tabbar">
+      <button type="button" class="tab-btn active" data-tab="record">บันทึกรายจ่าย</button>
+      <button type="button" class="tab-btn" data-tab="pool">กองกลาง</button>
+      <button type="button" class="tab-btn" data-tab="summary">สรุป</button>
+    </div>
+
+    <div class="tab-panel" data-panel="record">
+      <div class="card">
+        <h2 id="formTitle" style="margin-bottom:14px;">เพิ่มรายจ่าย</h2>
+        <div class="field">
+          <label for="descInput">รายการ</label>
+          <input id="descInput" type="text" placeholder="เช่น ค่าอาหารเย็น" />
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="amountInput">จำนวนเงิน (฿)</label>
+            <input id="amountInput" type="number" min="0" step="0.01" placeholder="0" inputmode="decimal" />
+          </div>
+          <div class="field">
+            <label for="dateInput">วันที่</label>
+            <input id="dateInput" type="date" />
+          </div>
+        </div>
+        <div class="field">
+          <label>หมวดหมู่</label>
+          <div class="cats" id="catButtons"></div>
+        </div>
+        <div class="field">
+          <label for="paidBySelect">ใครจ่าย</label>
+          <select id="paidBySelect"></select>
+        </div>
+        <div class="field">
+          <label>หารกับใครบ้าง</label>
+          <div class="split-list" id="splitList"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" id="submitExpenseBtn" type="button">บันทึกรายจ่าย</button>
+          <button class="btn-ghost" id="cancelEditBtn" type="button" hidden>ยกเลิก</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-bottom:10px;">รายการรายจ่าย</h2>
+        <div id="expenseList"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-panel="pool" hidden>
+      <div class="card">
+        <h2 style="margin-bottom:14px;">เงินกองกลาง</h2>
+        <div class="pool-stats">
+          <div class="pool-stat">
+            <div class="label">เก็บมาแล้ว</div>
+            <div class="value mono" id="poolCollectedInline">฿0</div>
+          </div>
+          <div class="pool-stat">
+            <div class="label">ใช้ไปแล้ว</div>
+            <div class="value mono" id="poolSpentInline">฿0</div>
+          </div>
+          <div class="pool-stat">
+            <div class="label">คงเหลือ</div>
+            <div class="value mono" id="poolRemainingInline">฿0</div>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="contribMemberSelect">สมาชิก</label>
+            <select id="contribMemberSelect"></select>
+          </div>
+          <div class="field">
+            <label for="contribAmountInput">จำนวนเงิน (฿)</label>
+            <input id="contribAmountInput" type="number" min="0" step="0.01" placeholder="0" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="contribDateInput">วันที่</label>
+          <input id="contribDateInput" type="date" />
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" id="addContribBtn" type="button">บันทึกเงินเข้ากองกลาง</button>
+        </div>
+        <div id="contribList" style="margin-top:14px;"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-panel="summary" hidden>
+      <div class="dash-grid">
+        <div class="dash-tile">
+          <div class="label">ยอดใช้จ่ายรวมทั้งทริป</div>
+          <div class="value mono" id="dashTotal">฿0</div>
+        </div>
+        <div class="dash-tile">
+          <div class="label">เก็บเข้ากองกลาง</div>
+          <div class="value mono" id="dashPoolCollected">฿0</div>
+        </div>
+        <div class="dash-tile">
+          <div class="label">ใช้จากกองกลางแล้ว</div>
+          <div class="value mono" id="dashPoolSpent">฿0</div>
+        </div>
+        <div class="dash-tile" id="dashPoolRemainingTile">
+          <div class="label">คงเหลือกองกลาง</div>
+          <div class="value mono" id="dashPoolRemaining">฿0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>ยอดใช้จ่ายรวม</h2>
+        <div class="total-figure mono" id="totalFigure">฿0</div>
+        <div class="total-sub" id="totalSub"></div>
+        <div id="categoryBars" style="margin-top:16px;"></div>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:10px;">ยอดคงเหลือแต่ละคน</h2>
+        <div id="balanceList"></div>
+      </div>
+      <div class="card">
+        <h2 style="margin-bottom:10px;">แนะนำการโอนเงิน</h2>
+        <div id="settleList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var SUPABASE_URL = "https://hfkfqcnrykxlhwzscgkm.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_4zopcjkqoK8gBGrNwzlHIg_1Gs543tH";
+  var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  var POOL_ID = "__pool__";
+  var POOL_LABEL = "เงินกองกลาง";
+  function payerDisplay(name){ return name === POOL_ID ? POOL_LABEL : name; }
+
+  var CATEGORIES = [
+    {id:"food", label:"อาหาร", token:"--cat-food"},
+    {id:"stay", label:"ที่พัก", token:"--cat-stay"},
+    {id:"transport", label:"เดินทาง", token:"--cat-transport"},
+    {id:"activity", label:"กิจกรรม", token:"--cat-activity"},
+    {id:"other", label:"อื่นๆ", token:"--cat-other"}
+  ];
+  function catInfo(id){
+    for(var i=0;i<CATEGORIES.length;i++) if(CATEGORIES[i].id===id) return CATEGORIES[i];
+    return CATEGORIES[4];
   }
-  empty.hidden = true;
+  var state = {
+    dbAvailable: null,
+    trips: [],
+    currentTripId: null,
+    creatingNewTrip: false,
+    trip: null,
+    expenses: [],
+    contributions: [],
+    selectedCat: "food",
+    editingId: null,
+    deleteArmId: null,
+    deleteArmContribId: null,
+    lastMembers: null
+  };
 
-  const byLabel = {};
-  koMatches.forEach(m => {
-    const label = roundLabels[m.intRound] || `รอบที่ ${m.intRound}`;
-    (byLabel[label] = byLabel[label] || []).push(m);
-  });
+  var currentTripChannel = null;
 
-  const order = BRACKET_ORDER.filter(l => byLabel[l]);
-  Object.keys(byLabel).forEach(l => { if (!order.includes(l)) order.push(l); });
-
-  order.forEach(label => {
-    const col = document.createElement('div');
-    col.className = 'bracket-round';
-    const h = document.createElement('h4');
-    h.textContent = label;
-    col.appendChild(h);
-    byLabel[label]
-      .map(m => ({ m, b: toBangkok(m.dateEvent, m.strTime) }))
-      .sort((a, b) => a.b.sortMs - b.b.sortMs)
-      .forEach(({ m, b }) => col.appendChild(renderBracketMatch(m, b)));
-    wrap.appendChild(col);
-  });
-}
-
-// ---------- Rendering: qualified summary ----------
-
-function renderQualified() {
-  const el = document.getElementById('qualifiedContent');
-  el.innerHTML = '';
-  const groups = computeStandings(allMatches);
-  const letters = Object.keys(groups).sort();
-
-  if (!letters.length) {
-    el.innerHTML = '<p>ยังไม่มีข้อมูลสำหรับสรุปทีมผ่านเข้ารอบ</p>';
-    return;
+  var TRIP_STORAGE_KEY = "tripLedger.currentTripId";
+  function getSavedTripId(){
+    try{ return localStorage.getItem(TRIP_STORAGE_KEY); }catch(e){ return null; }
+  }
+  function saveTripId(id){
+    try{ localStorage.setItem(TRIP_STORAGE_KEY, id); }catch(e){}
   }
 
-  const groupMatchCount = {};
-  allMatches.forEach(m => {
-    if (/^[A-Z]$/.test(m.strGroup || '') && FINISHED_STATUSES.has(m.strStatus)) {
-      groupMatchCount[m.strGroup] = (groupMatchCount[m.strGroup] || 0) + 1;
+  // ---------------- row <-> app object mapping ----------------
+  function rowToTrip(row){
+    return {id: row.id, name: row.name, members: row.members || [], currency: row.currency, createdAt: row.created_at};
+  }
+  function rowToExpense(row){
+    return {
+      id: row.id, description: row.description, amount: Number(row.amount),
+      category: row.category, date: row.date, paidBy: row.paid_by,
+      splitAmong: row.split_among || [], createdAt: row.created_at
+    };
+  }
+  function rowToContribution(row){
+    return {id: row.id, member: row.member, amount: Number(row.amount), date: row.date, createdAt: row.created_at};
+  }
+
+  function todayISO(){
+    var d = new Date();
+    var tz = d.getTimezoneOffset()*60000;
+    return new Date(d - tz).toISOString().slice(0,10);
+  }
+
+  function fmtMoney(n){
+    n = Math.round(n || 0);
+    return "฿" + n.toLocaleString("th-TH");
+  }
+
+  function fmtDateHeading(iso){
+    var d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString("th-TH", {day:"numeric", month:"short", year:"numeric"});
+  }
+
+  // ---------------- supabase wiring ----------------
+  async function init(){
+    dateInputDefault();
+    wireStaticEvents();
+    await loadTrips();
+
+    supabase.channel("trips-list")
+      .on("postgres_changes", {event:"*", schema:"public", table:"trips"}, function(){ loadTrips(); })
+      .subscribe(function(status){
+        state.dbAvailable = (status === "SUBSCRIBED");
+        updateSyncNote();
+      });
+  }
+
+  async function loadTrips(){
+    var res = await supabase.from("trips").select("*").order("created_at",{ascending:false}).limit(200);
+    state.trips = (res.data || []).map(rowToTrip);
+    renderTripSwitcherList();
+    reconcileSelection();
+  }
+
+  function reconcileSelection(){
+    if(state.currentTripId && state.trips.some(function(t){ return t.id === state.currentTripId; })){
+      return;
     }
-  });
-  const totalFinished = Object.values(groupMatchCount).reduce((a, b) => a + b, 0);
-  const totalGroupMatches = letters.length * 6;
-  const complete = totalFinished >= totalGroupMatches;
+    var saved = getSavedTripId();
+    var target = null;
+    if(saved && state.trips.some(function(t){ return t.id === saved; })) target = saved;
+    else if(state.trips.length > 0) target = state.trips[0].id;
 
-  const note = document.createElement('div');
-  note.className = 'note';
-  note.innerHTML = `<b>เงื่อนไขผ่านเข้ารอบ:</b> อันดับ 1 และ 2 ของแต่ละกลุ่ม (รวม ${letters.length * 2} ทีม) ผ่านเข้ารอบ 32 ทีมโดยตรง
-    และทีมอันดับ 3 ที่มีผลงานดีที่สุด 8 ทีม (จาก ${letters.length} กลุ่ม) จะได้สิทธิ์ผ่านเข้ารอบเพิ่มอีก 8 ทีม รวมเป็น 32 ทีมสุดท้าย<br>
-    <b>สถานะรอบแบ่งกลุ่ม:</b> แข่งจบแล้ว ${totalFinished} / ${totalGroupMatches} นัด
-    ${complete ? ' — ผลตารางด้านล่างเป็นผลสรุปสุดท้าย' : ' — ผลด้านล่างเป็นผลปัจจุบัน อาจเปลี่ยนแปลงได้จนกว่ารอบแบ่งกลุ่มจะจบ'}`;
-  el.appendChild(note);
-
-  const directQualifiers = [];
-  const thirdPlaced = [];
-  letters.forEach(g => {
-    const standing = groups[g];
-    if (standing[0]) directQualifiers.push({ ...standing[0], group: g });
-    if (standing[1]) directQualifiers.push({ ...standing[1], group: g });
-    if (standing[2]) thirdPlaced.push({ ...standing[2], group: g });
-  });
-
-  thirdPlaced.sort((a, b) => b.Pts - a.Pts || b.GD - a.GD || b.GF - a.GF || a.team.localeCompare(b.team));
-  const bestThirds = thirdPlaced.slice(0, 8);
-  const bestThirdNames = new Set(bestThirds.map(t => t.team + '|' + t.group));
-
-  const h2a = document.createElement('h3');
-  h2a.textContent = `ทีมที่ผ่านเข้ารอบโดยตรง (อันดับ 1-2 ของแต่ละกลุ่ม)`;
-  el.appendChild(h2a);
-  const listA = document.createElement('div');
-  listA.className = 'qualified-list';
-  directQualifiers.forEach(t => {
-    const item = document.createElement('div');
-    item.className = 'qualified-item';
-    item.innerHTML = `${flagImg(t.team)} <span>${t.team}</span> <small style="margin-left:auto;color:var(--muted)">กลุ่ม ${t.group}</small>`;
-    listA.appendChild(item);
-  });
-  el.appendChild(listA);
-
-  const h2b = document.createElement('h3');
-  h2b.textContent = 'อันดับ 3 ของแต่ละกลุ่ม (จัดอันดับ 8 ทีมที่ดีที่สุดเพื่อผ่านเข้ารอบ)';
-  el.appendChild(h2b);
-  const listB = document.createElement('div');
-  listB.className = 'qualified-list';
-  thirdPlaced.forEach((t, idx) => {
-    const qualifies = bestThirdNames.has(t.team + '|' + t.group);
-    const item = document.createElement('div');
-    item.className = 'qualified-item' + (qualifies ? '' : ' maybe');
-    item.style.background = qualifies ? 'var(--qualify)' : 'var(--out)';
-    item.style.borderColor = qualifies ? 'var(--qualify-border)' : 'var(--out-border)';
-    item.innerHTML = `${flagImg(t.team)} <span>${t.team}</span>
-      <small style="margin-left:auto;color:var(--muted)">กลุ่ม ${t.group} • ${t.Pts} แต้ม • #${idx + 1}</small>`;
-    listB.appendChild(item);
-  });
-  el.appendChild(listB);
-
-  const h2c = document.createElement('h3');
-  h2c.textContent = `รายชื่อ 32 ทีมสุดท้าย${complete ? '' : ' (ปัจจุบัน)'}`;
-  el.appendChild(h2c);
-  const listC = document.createElement('div');
-  listC.className = 'qualified-list';
-  const all32 = directQualifiers.concat(bestThirds).sort((a, b) => a.group.localeCompare(b.group) || a.team.localeCompare(b.team));
-  all32.forEach(t => {
-    const item = document.createElement('div');
-    item.className = 'qualified-item';
-    item.innerHTML = `${flagImg(t.team)} <span>${t.team}</span> <small style="margin-left:auto;color:var(--muted)">กลุ่ม ${t.group}</small>`;
-    listC.appendChild(item);
-  });
-  el.appendChild(listC);
-}
-
-// ---------- Top scorers ----------
-
-function readGoalsCache() {
-  try {
-    const raw = localStorage.getItem(GOALS_CACHE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch (e) {
-    return {};
-  }
-}
-
-function writeGoalsCache() {
-  try {
-    localStorage.setItem(GOALS_CACHE_KEY, JSON.stringify(goalsCache));
-  } catch (e) {}
-}
-
-async function fetchEventGoals(idEvent) {
-  const res = await fetch(`${API_BASE}/lookuptimeline.php?id=${idEvent}`);
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const json = await res.json();
-  const timeline = json.timeline || [];
-  return timeline
-    .filter(t => t.strTimeline === 'Goal' && !/own goal/i.test(t.strTimelineDetail || ''))
-    .map(t => ({ player: t.strPlayer, team: t.strTeam, time: t.intTime }));
-}
-
-async function ensureGoalscorers(matches) {
-  const finished = matches.filter(m =>
-    FINISHED_STATUSES.has(m.strStatus) &&
-    (parseInt(m.intHomeScore, 10) > 0 || parseInt(m.intAwayScore, 10) > 0)
-  );
-  let updated = false;
-  for (const m of finished) {
-    if (goalsCache[m.idEvent]) continue;
-    try {
-      goalsCache[m.idEvent] = await fetchEventGoals(m.idEvent);
-      updated = true;
-      await new Promise(r => setTimeout(r, GOAL_FETCH_DELAY_MS));
-    } catch (e) {
-      // skip on failure, retry on next refresh
+    if(target){
+      selectTrip(target);
+    } else {
+      state.currentTripId = null;
+      state.trip = null;
+      onTripChange();
     }
   }
-  if (updated) writeGoalsCache();
-  return updated;
-}
 
-function renderScorers() {
-  const tbody = document.getElementById('scorersBody');
-  const empty = document.getElementById('scorersEmpty');
-  const tableWrap = document.getElementById('scorersTableWrap');
-  tbody.innerHTML = '';
+  function selectTrip(tripId){
+    if(currentTripChannel){ supabase.removeChannel(currentTripChannel); currentTripChannel = null; }
 
-  const tally = {};
-  Object.values(goalsCache).forEach(goals => {
-    goals.forEach(g => {
-      const key = g.player + '|' + g.team;
-      tally[key] = tally[key] || { player: g.player, team: g.team, goals: 0 };
-      tally[key].goals++;
+    state.currentTripId = tripId;
+    state.creatingNewTrip = false;
+    state.editingId = null;
+    state.deleteArmId = null;
+    state.deleteArmContribId = null;
+    state.lastMembers = null;
+    state.expenses = [];
+    state.contributions = [];
+    saveTripId(tripId);
+    resetForm();
+
+    refetchTrip(tripId);
+    refetchExpenses(tripId);
+    refetchContributions(tripId);
+
+    currentTripChannel = supabase.channel("trip-" + tripId)
+      .on("postgres_changes", {event:"*", schema:"public", table:"trips", filter:"id=eq." + tripId}, function(){ refetchTrip(tripId); })
+      .on("postgres_changes", {event:"*", schema:"public", table:"expenses", filter:"trip_id=eq." + tripId}, function(){ refetchExpenses(tripId); })
+      .on("postgres_changes", {event:"*", schema:"public", table:"contributions", filter:"trip_id=eq." + tripId}, function(){ refetchContributions(tripId); })
+      .subscribe();
+
+    renderTripSwitcherList();
+  }
+
+  async function refetchTrip(tripId){
+    var res = await supabase.from("trips").select("*").eq("id", tripId).maybeSingle();
+    if(tripId !== state.currentTripId) return;
+    state.trip = res.data ? rowToTrip(res.data) : null;
+    onTripChange();
+  }
+  async function refetchExpenses(tripId){
+    var res = await supabase.from("expenses").select("*").eq("trip_id", tripId).order("created_at",{ascending:false}).limit(500);
+    if(tripId !== state.currentTripId) return;
+    state.expenses = (res.data || []).map(rowToExpense);
+    renderExpensesAndSummary();
+  }
+  async function refetchContributions(tripId){
+    var res = await supabase.from("contributions").select("*").eq("trip_id", tripId).order("created_at",{ascending:false}).limit(500);
+    if(tripId !== state.currentTripId) return;
+    state.contributions = (res.data || []).map(rowToContribution);
+    renderExpensesAndSummary();
+  }
+
+  function updateSyncNote(){
+    var dot = document.getElementById("syncDot");
+    var txt = document.getElementById("syncText");
+    if(state.dbAvailable){
+      dot.classList.remove("off");
+      txt.textContent = "ซิงก์กับเพื่อนในกลุ่มแบบเรียลไทม์";
+    } else {
+      dot.classList.add("off");
+      txt.textContent = "กำลังเชื่อมต่อ...";
+    }
+  }
+
+  function dateInputDefault(){
+    document.getElementById("dateInput").value = todayISO();
+    document.getElementById("contribDateInput").value = todayISO();
+  }
+
+  // ---------------- trip create / update ----------------
+  async function createTrip(name, members){
+    var res = await supabase.from("trips").insert({name: name, members: members, currency: "THB"}).select().single();
+    if(res.error || !res.data) return;
+    selectTrip(res.data.id);
+  }
+
+  async function writeTrip(data){
+    await supabase.from("trips").update({name: data.name, members: data.members}).eq("id", state.currentTripId);
+    await refetchTrip(state.currentTripId);
+  }
+
+  async function addExpenseDoc(data){
+    await supabase.from("expenses").insert({
+      trip_id: state.currentTripId,
+      description: data.description,
+      amount: data.amount,
+      category: data.category,
+      date: data.date,
+      paid_by: data.paidBy,
+      split_among: data.splitAmong
     });
-  });
-
-  const rows = Object.values(tally).sort((a, b) =>
-    b.goals - a.goals || a.player.localeCompare(b.player)
-  );
-
-  if (!rows.length) {
-    empty.hidden = false;
-    tableWrap.hidden = true;
-    return;
+    await refetchExpenses(state.currentTripId);
   }
-  empty.hidden = true;
-  tableWrap.hidden = false;
+  async function updateExpenseDoc(id, data){
+    await supabase.from("expenses").update({
+      description: data.description,
+      amount: data.amount,
+      category: data.category,
+      date: data.date,
+      paid_by: data.paidBy,
+      split_among: data.splitAmong
+    }).eq("id", id);
+    await refetchExpenses(state.currentTripId);
+  }
+  async function deleteExpenseDoc(id){
+    await supabase.from("expenses").delete().eq("id", id);
+    await refetchExpenses(state.currentTripId);
+  }
 
-  rows.forEach((r, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${idx + 1}</td>
-      <td class="team-name"><span class="team-full">${r.player}</span></td>
-      <td class="team-name">${flagImg(r.team)} <span class="team-full">${r.team}</span></td>
-      <td><b>${r.goals}</b></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+  async function addContributionDoc(data){
+    await supabase.from("contributions").insert({
+      trip_id: state.currentTripId,
+      member: data.member,
+      amount: data.amount,
+      date: data.date
+    });
+    await refetchContributions(state.currentTripId);
+  }
+  async function deleteContributionDoc(id){
+    await supabase.from("contributions").delete().eq("id", id);
+    await refetchContributions(state.currentTripId);
+  }
 
-// ---------- Rendering: per-team schedule ----------
+  // ---------------- onboarding ----------------
+  var setupMembers = [];
+  function renderSetupMembers(){
+    var box = document.getElementById("setupMembers");
+    box.innerHTML = "";
+    setupMembers.forEach(function(name, idx){
+      var tag = document.createElement("span");
+      tag.className = "tag";
+      var label = document.createTextNode(name);
+      tag.appendChild(label);
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = "×";
+      btn.addEventListener("click", function(){
+        setupMembers.splice(idx,1);
+        renderSetupMembers();
+      });
+      tag.appendChild(btn);
+      box.appendChild(tag);
+    });
+  }
 
-function renderTeamSelect() {
-  const sel = document.getElementById('teamSelect');
-  const prev = sel.value;
-  sel.innerHTML = '<option value="">-- เลือกทีม --</option>';
-  const groupLetters = getGroupLetters(allMatches);
-  groupLetters.forEach(g => {
-    const teams = new Set();
-    allMatches.forEach(m => {
-      if (m.strGroup === g) {
-        teams.add(m.strHomeTeam);
-        teams.add(m.strAwayTeam);
+  function wireStaticEvents(){
+    document.getElementById("setupAddMemberBtn").addEventListener("click", function(){
+      var inp = document.getElementById("setupMemberInput");
+      var name = inp.value.trim();
+      if(name && setupMembers.indexOf(name) === -1){
+        setupMembers.push(name);
+        renderSetupMembers();
+      }
+      inp.value = "";
+      inp.focus();
+    });
+    document.getElementById("setupMemberInput").addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); document.getElementById("setupAddMemberBtn").click(); }
+    });
+    document.getElementById("setupStartBtn").addEventListener("click", async function(){
+      var name = document.getElementById("setupName").value.trim() || "ทริปของกลุ่มเรา";
+      await createTrip(name, setupMembers.slice());
+    });
+    document.getElementById("setupCancelBtn").addEventListener("click", function(){
+      state.creatingNewTrip = false;
+      onTripChange();
+    });
+
+    document.getElementById("switchTripBtn").addEventListener("click", function(){
+      var panel = document.getElementById("tripSwitcherPanel");
+      panel.hidden = !panel.hidden;
+      if(!panel.hidden) renderTripSwitcherList();
+    });
+    document.getElementById("newTripBtn").addEventListener("click", function(){
+      document.getElementById("tripSwitcherPanel").hidden = true;
+      setupMembers = [];
+      document.getElementById("setupName").value = "";
+      renderSetupMembers();
+      state.creatingNewTrip = true;
+      onTripChange();
+    });
+
+    document.getElementById("addMemberBtn").addEventListener("click", addMemberFromInput);
+    document.getElementById("memberInput").addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); addMemberFromInput(); }
+    });
+
+    document.getElementById("tripTitleView").addEventListener("click", function(){
+      startEditTripName();
+    });
+
+    var tabbar = document.getElementById("tabbar");
+    tabbar.addEventListener("click", function(e){
+      var btn = e.target.closest(".tab-btn");
+      if(!btn) return;
+      switchTab(btn.dataset.tab);
+    });
+
+    var cats = document.getElementById("catButtons");
+    CATEGORIES.forEach(function(c){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "cat-btn";
+      b.style.setProperty("--cat-color", "var(" + c.token + ")");
+      b.dataset.cat = c.id;
+      b.innerHTML = '<span class="dot" style="background:var(' + c.token + ')"></span>' + c.label;
+      b.addEventListener("click", function(){
+        state.selectedCat = c.id;
+        Array.prototype.forEach.call(cats.children, function(el){ el.classList.toggle("active", el.dataset.cat === c.id); });
+      });
+      cats.appendChild(b);
+    });
+    cats.children[0].classList.add("active");
+
+    document.getElementById("submitExpenseBtn").addEventListener("click", submitExpense);
+    document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+
+    document.getElementById("addContribBtn").addEventListener("click", async function(){
+      var member = document.getElementById("contribMemberSelect").value;
+      var amount = parseFloat(document.getElementById("contribAmountInput").value);
+      var date = document.getElementById("contribDateInput").value || todayISO();
+      if(!member || !amount || amount <= 0) return;
+      await addContributionDoc({member: member, amount: amount, date: date});
+      document.getElementById("contribAmountInput").value = "";
+    });
+  }
+
+  function switchTab(tab){
+    Array.prototype.forEach.call(document.querySelectorAll(".tab-btn"), function(btn){
+      btn.classList.toggle("active", btn.dataset.tab === tab);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".tab-panel"), function(panel){
+      panel.hidden = panel.dataset.panel !== tab;
+    });
+  }
+
+  async function addMemberFromInput(){
+    var inp = document.getElementById("memberInput");
+    var name = inp.value.trim();
+    if(!name || !state.trip) return;
+    var members = (state.trip.members || []).slice();
+    if(members.indexOf(name) === -1){
+      members.push(name);
+      await writeTrip(Object.assign({}, state.trip, {members: members}));
+    }
+    inp.value = "";
+    inp.focus();
+  }
+
+  async function removeMember(name){
+    if(!state.trip) return;
+    var members = (state.trip.members || []).filter(function(m){ return m !== name; });
+    await writeTrip(Object.assign({}, state.trip, {members: members}));
+  }
+
+  function startEditTripName(){
+    var view = document.getElementById("tripTitleView");
+    var current = state.trip.name;
+    view.innerHTML = "";
+    var input = document.createElement("input");
+    input.type = "text";
+    input.value = current;
+    view.appendChild(input);
+    input.focus();
+    input.select();
+    function commit(){
+      var v = input.value.trim() || current;
+      writeTrip(Object.assign({}, state.trip, {name: v}));
+    }
+    input.addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); commit(); }
+      if(e.key === "Escape"){ renderTripHeader(); }
+    });
+    input.addEventListener("blur", commit);
+  }
+
+  // ---------------- rendering ----------------
+  function renderTripSwitcherList(){
+    var box = document.getElementById("tripSwitcherList");
+    if(!box) return;
+    box.innerHTML = "";
+    if(state.trips.length === 0){
+      var p = document.createElement("p");
+      p.className = "empty-note";
+      p.textContent = "ยังไม่มีทริป";
+      box.appendChild(p);
+      return;
+    }
+    state.trips.forEach(function(t){
+      var row = document.createElement("div");
+      row.className = "trip-switcher-row" + (t.id === state.currentTripId ? " current" : "");
+
+      var nameSpan = document.createElement("span");
+      nameSpan.textContent = t.name;
+
+      var metaSpan = document.createElement("span");
+      metaSpan.className = "meta";
+      var created = t.createdAt ? new Date(t.createdAt) : null;
+      var memberCount = (t.members || []).length;
+      metaSpan.textContent = memberCount + " คน" +
+        (created ? " · เริ่ม " + created.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"}) : "");
+
+      row.appendChild(nameSpan);
+      row.appendChild(metaSpan);
+      row.addEventListener("click", function(){
+        document.getElementById("tripSwitcherPanel").hidden = true;
+        if(t.id !== state.currentTripId) selectTrip(t.id);
+      });
+      box.appendChild(row);
+    });
+  }
+
+  function onTripChange(){
+    var onboarding = document.getElementById("onboarding");
+    var app = document.getElementById("app");
+    var showOnboarding = !state.trip || state.creatingNewTrip;
+
+    if(showOnboarding){
+      onboarding.hidden = false;
+      app.hidden = true;
+      document.getElementById("setupCancelBtn").hidden = !state.trip;
+      renderSetupMembers();
+    } else {
+      onboarding.hidden = true;
+      app.hidden = false;
+      renderTripHeader();
+      var membersKey = JSON.stringify(state.trip.members || []);
+      if(membersKey !== state.lastMembers){
+        state.lastMembers = membersKey;
+        renderMemberDependentFormParts();
+      }
+      renderExpensesAndSummary();
+    }
+  }
+
+  function renderTripHeader(){
+    document.getElementById("tripTitleView").textContent = state.trip.name;
+    var created = state.trip.createdAt ? new Date(state.trip.createdAt) : new Date();
+    document.getElementById("tripCode").textContent =
+      "เริ่ม " + created.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
+
+    var chips = document.getElementById("memberChips");
+    chips.innerHTML = "";
+    (state.trip.members || []).forEach(function(name){
+      var tag = document.createElement("span");
+      tag.className = "tag";
+      var label = document.createTextNode(name);
+      tag.appendChild(label);
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = "×";
+      btn.title = "ลบสมาชิก";
+      btn.addEventListener("click", function(){ removeMember(name); });
+      tag.appendChild(btn);
+      chips.appendChild(tag);
+    });
+    if((state.trip.members || []).length === 0){
+      var note = document.createElement("span");
+      note.className = "hint";
+      note.textContent = "ยังไม่มีสมาชิก เพิ่มเพื่อนในกลุ่มด้านขวา";
+      chips.appendChild(note);
+    }
+  }
+
+  function renderMemberDependentFormParts(){
+    var members = state.trip.members || [];
+    var paidBy = document.getElementById("paidBySelect");
+    var prevPaid = paidBy.value;
+    paidBy.innerHTML = "";
+    members.forEach(function(name){
+      var opt = document.createElement("option");
+      opt.value = name; opt.textContent = name;
+      paidBy.appendChild(opt);
+    });
+    var poolOpt = document.createElement("option");
+    poolOpt.value = POOL_ID;
+    poolOpt.textContent = POOL_LABEL + " (จ่ายจากกองกลาง)";
+    paidBy.appendChild(poolOpt);
+    if(prevPaid === POOL_ID || members.indexOf(prevPaid) !== -1) paidBy.value = prevPaid;
+
+    var contribSel = document.getElementById("contribMemberSelect");
+    var prevContrib = contribSel.value;
+    contribSel.innerHTML = "";
+    members.forEach(function(name){
+      var opt = document.createElement("option");
+      opt.value = name; opt.textContent = name;
+      contribSel.appendChild(opt);
+    });
+    if(members.indexOf(prevContrib) !== -1) contribSel.value = prevContrib;
+
+    var splitBox = document.getElementById("splitList");
+    var prevChecked = {};
+    Array.prototype.forEach.call(splitBox.querySelectorAll("input"), function(inp){
+      prevChecked[inp.value] = inp.checked;
+    });
+    splitBox.innerHTML = "";
+    members.forEach(function(name){
+      var lab = document.createElement("label");
+      lab.className = "split-chip";
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.value = name;
+      cb.checked = prevChecked.hasOwnProperty(name) ? prevChecked[name] : true;
+      lab.appendChild(cb);
+      lab.appendChild(document.createTextNode(name));
+      splitBox.appendChild(lab);
+    });
+  }
+
+  function resetForm(){
+    state.editingId = null;
+    document.getElementById("formTitle").textContent = "เพิ่มรายจ่าย";
+    document.getElementById("submitExpenseBtn").textContent = "บันทึกรายจ่าย";
+    document.getElementById("cancelEditBtn").hidden = true;
+    document.getElementById("descInput").value = "";
+    document.getElementById("amountInput").value = "";
+    dateInputDefault();
+    state.selectedCat = "food";
+    Array.prototype.forEach.call(document.getElementById("catButtons").children, function(el){
+      el.classList.toggle("active", el.dataset.cat === "food");
+    });
+    Array.prototype.forEach.call(document.getElementById("splitList").querySelectorAll("input"), function(cb){
+      cb.checked = true;
+    });
+  }
+
+  function beginEdit(exp){
+    state.editingId = exp.id;
+    document.getElementById("formTitle").textContent = "แก้ไขรายจ่าย";
+    document.getElementById("submitExpenseBtn").textContent = "บันทึกการแก้ไข";
+    document.getElementById("cancelEditBtn").hidden = false;
+    document.getElementById("descInput").value = exp.description;
+    document.getElementById("amountInput").value = exp.amount;
+    document.getElementById("dateInput").value = exp.date;
+    state.selectedCat = exp.category;
+    Array.prototype.forEach.call(document.getElementById("catButtons").children, function(el){
+      el.classList.toggle("active", el.dataset.cat === exp.category);
+    });
+    document.getElementById("paidBySelect").value = exp.paidBy;
+    Array.prototype.forEach.call(document.getElementById("splitList").querySelectorAll("input"), function(cb){
+      cb.checked = exp.splitAmong.indexOf(cb.value) !== -1;
+    });
+    document.getElementById("formTitle").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  async function submitExpense(){
+    var desc = document.getElementById("descInput").value.trim();
+    var amount = parseFloat(document.getElementById("amountInput").value);
+    var date = document.getElementById("dateInput").value || todayISO();
+    var paidBy = document.getElementById("paidBySelect").value;
+    var splitAmong = Array.prototype.filter.call(
+      document.getElementById("splitList").querySelectorAll("input"),
+      function(cb){ return cb.checked; }
+    ).map(function(cb){ return cb.value; });
+
+    if(!desc || !amount || amount <= 0 || !paidBy || splitAmong.length === 0){
+      return;
+    }
+
+    var payload = {
+      description: desc,
+      amount: amount,
+      category: state.selectedCat,
+      date: date,
+      paidBy: paidBy,
+      splitAmong: splitAmong
+    };
+
+    if(state.editingId){
+      await updateExpenseDoc(state.editingId, payload);
+    } else {
+      await addExpenseDoc(payload);
+    }
+    resetForm();
+  }
+
+  function armDelete(kind, id){
+    if(kind === "expense") state.deleteArmId = id; else state.deleteArmContribId = id;
+    renderExpensesAndSummary();
+    setTimeout(function(){
+      var stillArmed = kind === "expense" ? state.deleteArmId === id : state.deleteArmContribId === id;
+      if(stillArmed){
+        if(kind === "expense") state.deleteArmId = null; else state.deleteArmContribId = null;
+        renderExpensesAndSummary();
+      }
+    }, 4000);
+  }
+
+  function renderExpensesAndSummary(){
+    if(!state.trip){ return; }
+    renderExpenseList();
+    renderContributionList();
+    renderSummary();
+  }
+
+  function renderContributionList(){
+    var box = document.getElementById("contribList");
+    box.innerHTML = "";
+    if(state.contributions.length === 0){
+      var p = document.createElement("p");
+      p.className = "empty-note";
+      p.textContent = "ยังไม่มีการเก็บเงินกองกลาง";
+      box.appendChild(p);
+      return;
+    }
+    var sorted = state.contributions.slice().sort(function(a,b){
+      return (b.createdAt || "").localeCompare(a.createdAt || "");
+    });
+    sorted.forEach(function(c){
+      var row = document.createElement("div");
+      row.className = "contrib-row";
+
+      var left = document.createElement("span");
+      left.textContent = c.member + " · " + fmtDateHeading(c.date);
+
+      var right = document.createElement("span");
+      right.className = "contrib-right";
+
+      var amt = document.createElement("span");
+      amt.className = "mono";
+      amt.style.fontWeight = "600";
+      amt.textContent = fmtMoney(c.amount);
+
+      var del = document.createElement("button");
+      del.className = "icon-btn" + (state.deleteArmContribId === c.id ? " danger-arm" : "");
+      del.title = "ลบ";
+      del.textContent = state.deleteArmContribId === c.id ? "ยืนยันลบ" : "🗑";
+      del.addEventListener("click", function(){
+        if(state.deleteArmContribId === c.id){
+          deleteContributionDoc(c.id);
+          state.deleteArmContribId = null;
+        } else {
+          armDelete("contrib", c.id);
+        }
+      });
+
+      right.appendChild(amt);
+      right.appendChild(del);
+      row.appendChild(left);
+      row.appendChild(right);
+      box.appendChild(row);
+    });
+  }
+
+  function renderExpenseList(){
+    var list = document.getElementById("expenseList");
+    list.innerHTML = "";
+    if(state.expenses.length === 0){
+      var empty = document.createElement("p");
+      empty.className = "empty-note";
+      empty.textContent = "ยังไม่มีรายจ่าย เริ่มบันทึกรายการแรกได้เลย";
+      list.appendChild(empty);
+      return;
+    }
+    var sorted = state.expenses.slice().sort(function(a,b){
+      if(a.date !== b.date) return a.date < b.date ? 1 : -1;
+      return (b.createdAt || "").localeCompare(a.createdAt || "");
+    });
+    var lastDate = null;
+    sorted.forEach(function(exp){
+      if(exp.date !== lastDate){
+        lastDate = exp.date;
+        var h = document.createElement("div");
+        h.className = "date-heading";
+        h.textContent = fmtDateHeading(exp.date);
+        list.appendChild(h);
+      }
+      var row = document.createElement("div");
+      row.className = "expense";
+      row.style.setProperty("--cat-color", "var(" + catInfo(exp.category).token + ")");
+
+      var main = document.createElement("div");
+      main.className = "expense-main";
+      var desc = document.createElement("div");
+      desc.className = "expense-desc";
+      desc.textContent = exp.description;
+      if(exp.paidBy === POOL_ID){
+        var badge = document.createElement("span");
+        badge.className = "pool-badge";
+        badge.textContent = "กองกลาง";
+        desc.appendChild(badge);
+      }
+      var meta = document.createElement("div");
+      meta.className = "expense-meta";
+      meta.textContent = catInfo(exp.category).label + " · จ่ายโดย " + payerDisplay(exp.paidBy) + " · หาร " + exp.splitAmong.length + " คน";
+      main.appendChild(desc);
+      main.appendChild(meta);
+
+      var amt = document.createElement("div");
+      amt.className = "expense-amount mono";
+      amt.textContent = fmtMoney(exp.amount);
+
+      var actions = document.createElement("div");
+      actions.className = "expense-actions";
+      var editBtn = document.createElement("button");
+      editBtn.className = "icon-btn";
+      editBtn.title = "แก้ไข";
+      editBtn.textContent = "✎";
+      editBtn.addEventListener("click", function(){ beginEdit(exp); });
+
+      var delBtn = document.createElement("button");
+      delBtn.className = "icon-btn" + (state.deleteArmId === exp.id ? " danger-arm" : "");
+      delBtn.title = "ลบ";
+      delBtn.textContent = state.deleteArmId === exp.id ? "ยืนยันลบ" : "🗑";
+      delBtn.addEventListener("click", function(){
+        if(state.deleteArmId === exp.id){
+          deleteExpenseDoc(exp.id);
+          state.deleteArmId = null;
+        } else {
+          armDelete("expense", exp.id);
+        }
+      });
+
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+
+      row.appendChild(main);
+      row.appendChild(amt);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+  }
+
+  function computeBalances(){
+    var members = state.trip.members || [];
+    var balances = {};
+    members.forEach(function(m){ balances[m] = 0; });
+    var totalsByCategory = {};
+    var total = 0;
+    var poolSpent = 0;
+
+    state.expenses.forEach(function(exp){
+      total += exp.amount;
+      totalsByCategory[exp.category] = (totalsByCategory[exp.category] || 0) + exp.amount;
+      if(exp.paidBy === POOL_ID){
+        poolSpent += exp.amount;
+      } else if(balances.hasOwnProperty(exp.paidBy)){
+        balances[exp.paidBy] += exp.amount;
+      } else {
+        balances[exp.paidBy] = exp.amount;
+      }
+      var share = exp.amount / exp.splitAmong.length;
+      exp.splitAmong.forEach(function(name){
+        if(balances.hasOwnProperty(name)){
+          balances[name] -= share;
+        } else {
+          balances[name] = -share;
+        }
+      });
+    });
+
+    var poolCollected = 0;
+    state.contributions.forEach(function(c){
+      poolCollected += c.amount;
+      if(balances.hasOwnProperty(c.member)){
+        balances[c.member] += c.amount;
+      } else {
+        balances[c.member] = c.amount;
       }
     });
-    const optgroup = document.createElement('optgroup');
-    optgroup.label = 'กลุ่ม ' + g;
-    Array.from(teams).sort().forEach(t => {
-      const opt = document.createElement('option');
-      opt.value = t;
-      opt.textContent = t;
-      optgroup.appendChild(opt);
-    });
-    sel.appendChild(optgroup);
-  });
-  if (prev) sel.value = prev;
-}
 
-function renderTeamSchedule() {
-  const team = document.getElementById('teamSelect').value;
-  const el = document.getElementById('teamSchedule');
-  el.innerHTML = '';
-  if (!team) return;
-
-  const header = document.createElement('div');
-  header.className = 'team-header';
-  header.innerHTML = `${flagImg(team)} ${team}`;
-  el.appendChild(header);
-
-  const matches = allMatches
-    .filter(m => m.strHomeTeam === team || m.strAwayTeam === team)
-    .map(m => ({ m, b: toBangkok(m.dateEvent, m.strTime) }))
-    .sort((a, b) => a.b.sortMs - b.b.sortMs);
-
-  if (!matches.length) {
-    el.innerHTML += '<p>ไม่พบตารางการแข่งขันของทีมนี้</p>';
-    return;
+    return {
+      balances: balances,
+      total: total,
+      totalsByCategory: totalsByCategory,
+      poolCollected: poolCollected,
+      poolSpent: poolSpent,
+      poolRemaining: poolCollected - poolSpent
+    };
   }
 
-  let lastDateKey = null;
-  matches.forEach(({ m, b }) => {
-    if (b.dateKey !== lastDateKey) {
-      const h = document.createElement('div');
-      h.className = 'date-heading';
-      h.textContent = formatDateHeading(b);
-      el.appendChild(h);
-      lastDateKey = b.dateKey;
-    }
-    el.appendChild(renderMatchCard(m));
-  });
-}
-
-// ---------- Tabs ----------
-
-function setupTabs() {
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  function simplifyDebts(balances){
+    var creditors = [];
+    var debtors = [];
+    Object.keys(balances).forEach(function(name){
+      var v = balances[name];
+      if(v > 0.5) creditors.push({name:name, amt:v});
+      else if(v < -0.5) debtors.push({name:name, amt:-v});
     });
-  });
-}
+    creditors.sort(function(a,b){ return b.amt - a.amt; });
+    debtors.sort(function(a,b){ return b.amt - a.amt; });
 
-// ---------- Main ----------
+    var transfers = [];
+    var i=0, j=0;
+    while(i < debtors.length && j < creditors.length){
+      var pay = Math.min(debtors[i].amt, creditors[j].amt);
+      transfers.push({from: debtors[i].name, to: creditors[j].name, amount: pay});
+      debtors[i].amt -= pay;
+      creditors[j].amt -= pay;
+      if(debtors[i].amt < 0.5) i++;
+      if(creditors[j].amt < 0.5) j++;
+    }
+    return transfers;
+  }
 
-function renderAll() {
-  roundLabels = computeRoundLabels(allMatches);
-  renderToday();
-  renderScheduleFilters();
-  renderSchedule();
-  renderStandings();
-  renderFavorites();
-  renderBracket();
-  renderQualified();
-  renderTeamSelect();
-  renderTeamSchedule();
-  renderScorers();
-  document.getElementById('lastUpdated').textContent =
-    'อัปเดตล่าสุด: ' + new Date().toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' });
+  function renderSummary(){
+    var result = computeBalances();
+    var members = state.trip.members || [];
 
-  ensureGoalscorers(allMatches).then(updated => {
-    if (updated) renderScorers();
-  });
-}
+    document.getElementById("totalFigure").textContent = fmtMoney(result.total);
+    document.getElementById("totalSub").textContent = members.length
+      ? "เฉลี่ยคนละ " + fmtMoney(result.total / members.length)
+      : "ยังไม่มีสมาชิก";
 
-async function refresh(force) {
-  document.getElementById('lastUpdated').textContent = 'กำลังโหลดข้อมูล...';
-  const data = await loadMatches(force);
-  if (data.length) allMatches = data;
-  renderAll();
-}
+    document.getElementById("dashTotal").textContent = fmtMoney(result.total);
+    document.getElementById("dashPoolCollected").textContent = fmtMoney(result.poolCollected);
+    document.getElementById("dashPoolSpent").textContent = fmtMoney(result.poolSpent);
+    document.getElementById("dashPoolRemaining").textContent = fmtMoney(result.poolRemaining);
+    var remTile = document.getElementById("dashPoolRemainingTile");
+    remTile.classList.toggle("warn", result.poolRemaining < 0);
+    remTile.classList.toggle("good", result.poolRemaining > 0);
 
-document.getElementById('refreshBtn').addEventListener('click', () => refresh(true));
-document.getElementById('scheduleFilter').addEventListener('change', renderSchedule);
-document.getElementById('liveOnly').addEventListener('change', renderSchedule);
-document.getElementById('teamSelect').addEventListener('change', renderTeamSchedule);
+    document.getElementById("poolCollectedInline").textContent = fmtMoney(result.poolCollected);
+    document.getElementById("poolSpentInline").textContent = fmtMoney(result.poolSpent);
+    var remInline = document.getElementById("poolRemainingInline");
+    remInline.textContent = fmtMoney(result.poolRemaining);
+    remInline.className = "value mono" + (result.poolRemaining < 0 ? " neg" : (result.poolRemaining > 0 ? " pos" : ""));
 
-goalsCache = readGoalsCache();
-setupTabs();
-refresh(false);
-setInterval(() => refresh(true), CACHE_TTL_MS);
+    var barsBox = document.getElementById("categoryBars");
+    barsBox.innerHTML = "";
+    var catEntries = CATEGORIES
+      .map(function(c){ return {c:c, amt: result.totalsByCategory[c.id] || 0}; })
+      .filter(function(e){ return e.amt > 0; })
+      .sort(function(a,b){ return b.amt - a.amt; });
+    if(catEntries.length === 0){
+      var p = document.createElement("p");
+      p.className = "empty-note";
+      p.textContent = "ยังไม่มีข้อมูลรายจ่าย";
+      barsBox.appendChild(p);
+    }
+    catEntries.forEach(function(e){
+      var pct = result.total > 0 ? (e.amt / result.total * 100) : 0;
+      var row = document.createElement("div");
+      row.className = "bar-row";
+      row.innerHTML =
+        '<div class="bar-label"><span>' + e.c.label + '</span><span class="mono">' + fmtMoney(e.amt) + '</span></div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + pct.toFixed(1) + '%;background:var(' + e.c.token + ')"></div></div>';
+      barsBox.appendChild(row);
+    });
+
+    var balBox = document.getElementById("balanceList");
+    balBox.innerHTML = "";
+    if(members.length === 0){
+      var pe = document.createElement("p");
+      pe.className = "empty-note";
+      pe.textContent = "เพิ่มสมาชิกเพื่อดูยอดคงเหลือ";
+      balBox.appendChild(pe);
+    }
+    members.forEach(function(name){
+      var v = result.balances[name] || 0;
+      var cls = v > 0.5 ? "pos" : (v < -0.5 ? "neg" : "neu");
+      var label = v > 0.5 ? "จะได้คืน" : (v < -0.5 ? "ต้องจ่ายเพิ่ม" : "เคลียร์แล้ว");
+      var row = document.createElement("div");
+      row.className = "balance-row";
+      row.innerHTML =
+        '<span>' + name + ' <span style="color:var(--ink-soft);font-size:12px;">· ' + label + '</span></span>' +
+        '<span class="balance-amt ' + cls + '">' + fmtMoney(Math.abs(v)) + '</span>';
+      balBox.appendChild(row);
+    });
+
+    var settleBox = document.getElementById("settleList");
+    settleBox.innerHTML = "";
+    var transfers = simplifyDebts(result.balances);
+    if(transfers.length === 0){
+      var ps = document.createElement("p");
+      ps.className = "empty-note";
+      ps.textContent = "ยอดเคลียร์กันหมดแล้ว";
+      settleBox.appendChild(ps);
+    }
+    transfers.forEach(function(t){
+      var row = document.createElement("div");
+      row.className = "settle-row";
+      row.innerHTML =
+        '<span>' + t.from + '</span><span class="settle-arrow">→</span><span>' + t.to + '</span>' +
+        '<span class="settle-amt">' + fmtMoney(t.amount) + '</span>';
+      settleBox.appendChild(row);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
 </script>
 </body>
 </html>

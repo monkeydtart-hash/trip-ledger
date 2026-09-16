@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Trip Ledger — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#FAFAF8;
+    --paper-2:#FFFFFF;
+    --ink:#18181B;
+    --ink-soft:#84837C;
+    --line:#E6E4DD;
+    --accent:#3F6F63;
+    --accent-ink:#F7F6F2;
+    --accent-2:#3F6F63;
+    --danger:#B3402C;
+    --success:#3B7A54;
+    --cat-food:#A9895B;
+    --cat-stay:#5B8A82;
+    --cat-transport:#6B84A6;
+    --cat-activity:#9678A0;
+    --cat-other:#9A9A94;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#121212; --paper-2:#1A1A19; --ink:#EDEDEA; --ink-soft:#93938C; --line:#2B2B28;
+      --accent:#6FA396; --accent-ink:#0E1614; --accent-2:#6FA396; --danger:#E0836F; --success:#6FC08A;
+      --cat-food:#C7A576; --cat-stay:#6FA396; --cat-transport:#8FA6C7; --cat-activity:#B49AC0; --cat-other:#9E9E97;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#121212; --paper-2:#1A1A19; --ink:#EDEDEA; --ink-soft:#93938C; --line:#2B2B28;
+    --accent:#6FA396; --accent-ink:#0E1614; --accent-2:#6FA396; --danger:#E0836F; --success:#6FC08A;
+    --cat-food:#C7A576; --cat-stay:#6FA396; --cat-transport:#8FA6C7; --cat-activity:#B49AC0; --cat-other:#9E9E97;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;
+  }
+  h1,h2,h3{text-wrap:balance;margin:0;}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  input, select, button{font-size:15px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  [hidden]{display:none!important;}
+
+  /* ---------- shell ---------- */
+  .app-shell{display:flex;align-items:stretch;min-height:100vh;}
+  .sidebar{
+    width:272px;flex-shrink:0;
+    background:var(--paper-2);
+    border-right:1px solid var(--line);
+    padding:20px 16px 24px;
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .main-content{flex:1;min-width:0;padding:28px 32px 60px;}
+  @media (max-width:900px){
+    .app-shell{flex-direction:column;}
+    .sidebar{width:100%;border-right:none;border-bottom:1px solid var(--line);}
+    .main-content{padding:20px 16px 48px;}
+  }
+
+  .divider{height:1px;background:var(--line);border:none;margin:0;}
+
+  /* ---------- sidebar: brand ---------- */
+  .brand-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .brand-logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:16px;}
+  .brand-logo .icon{font-size:18px;}
+  .sync-badge{
+    display:flex;align-items:center;gap:5px;
+    font-size:10.5px;color:var(--ink-soft);
+    border:1px solid var(--line);border-radius:999px;
+    padding:3px 9px;white-space:nowrap;
+  }
+  .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--success);flex-shrink:0;}
+  .sync-dot.off{background:var(--ink-soft);}
+  .sidebar-subnote{font-size:11px;color:var(--ink-soft);}
+
+  /* ---------- sidebar: trip switcher ---------- */
+  .sb-label{font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;}
+  .dropdown-button{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    width:100%;border:1px solid var(--line);border-radius:8px;
+    background:var(--paper);color:var(--ink);
+    padding:10px 12px;min-height:44px;cursor:pointer;
+    font-size:14px;font-weight:500;text-align:left;
+  }
+  .dropdown-button .chev{color:var(--ink-soft);transition:transform .15s;}
+  .dropdown-button[aria-expanded="true"] .chev{transform:rotate(180deg);}
+  .trip-switcher-panel{
+    border:1px solid var(--line);border-radius:8px;padding:8px;margin-top:8px;background:var(--paper);
+  }
+  .trip-switcher-row{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:10px;border-radius:6px;cursor:pointer;font-size:13.5px;
+  }
+  .trip-switcher-row:hover{background:var(--paper-2);}
+  .trip-switcher-row.current{background:var(--paper-2);font-weight:600;}
+  .trip-switcher-row .meta{font-size:11.5px;color:var(--ink-soft);font-weight:400;white-space:nowrap;}
+
+  /* ---------- sidebar: nav ---------- */
+  .nav-section{display:flex;flex-direction:column;gap:2px;}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 10px;border-radius:8px;border:none;background:none;
+    color:var(--ink-soft);font-size:14px;font-weight:500;cursor:pointer;text-align:left;
+  }
+  .nav-item:hover{background:var(--paper);}
+  .nav-item.active{background:var(--ink);color:var(--paper-2);font-weight:600;}
+  .nav-item .icon{font-size:15px;width:18px;text-align:center;}
+
+  /* ---------- sidebar: members ---------- */
+  .members-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .icon-btn-sm{
+    background:none;border:1px solid var(--line);cursor:pointer;color:var(--ink);
+    width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .icon-btn-sm:hover{background:var(--paper);}
+  .members-list{display:flex;flex-direction:column;gap:2px;}
+  .member-row{display:flex;align-items:center;gap:9px;padding:7px 4px;border-radius:8px;}
+  .member-row:hover{background:var(--paper);}
+  .member-row:hover .member-remove{display:inline-flex;}
+  .avatar{
+    width:26px;height:26px;border-radius:50%;flex-shrink:0;
+    background:var(--accent);color:var(--accent-ink);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11.5px;font-weight:700;
+  }
+  .member-name{flex:1;min-width:0;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .admin-badge{
+    font-size:10px;color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;
+    padding:1px 7px;white-space:nowrap;
+  }
+  .member-remove{
+    display:none;background:none;border:none;cursor:pointer;color:var(--ink-soft);
+    font-size:14px;padding:2px 4px;
+  }
+  .member-remove:hover{color:var(--danger);}
+  .add-member-inline{display:flex;gap:6px;margin-top:8px;}
+  .add-member-inline input{
+    flex:1;min-width:0;padding:8px 10px;border-radius:7px;border:1px solid var(--line);
+    background:var(--paper);color:var(--ink);
+  }
+  .add-member-inline button{
+    border-radius:7px;border:none;background:var(--accent);color:var(--accent-ink);
+    padding:8px 12px;cursor:pointer;font-weight:600;white-space:nowrap;
+  }
+
+  /* ---------- sidebar: pot indicator ---------- */
+  .pot-box{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--paper);}
+  .pot-header{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink-soft);margin-bottom:4px;}
+  .pot-value{font-size:17px;font-weight:600;}
+
+  /* ---------- main header ---------- */
+  .main-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:22px;}
+  .breadcrumb{font-size:12px;color:var(--ink-soft);margin-bottom:4px;}
+  .breadcrumb .sep{margin:0 5px;}
+  .header-title{font-size:clamp(19px,3.4vw,25px);font-weight:600;cursor:text;}
+  .header-title input{font:inherit;color:inherit;background:transparent;border:none;border-bottom:1px solid var(--accent);width:min(360px,100%);}
+  .header-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn-action{
+    display:flex;align-items:center;gap:6px;
+    border:1px solid var(--line);background:var(--paper-2);color:var(--ink);
+    border-radius:8px;padding:9px 14px;font-size:13.5px;font-weight:500;cursor:pointer;
+  }
+  .btn-action:hover{background:var(--paper);}
+  .btn-action.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent;}
+
+  /* ---------- stats ---------- */
+  .top-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px;}
+  @media (max-width:700px){.top-stats-row{grid-template-columns:1fr;}}
+  .metric-card{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:16px 18px;
+  }
+  .metric-card .m-label{font-size:11.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+  .metric-card .m-value{font-size:24px;font-weight:600;font-family:"IBM Plex Mono",monospace;}
+  .metric-card .m-sub{font-size:12px;color:var(--ink-soft);margin-top:6px;}
+  .metric-card.warn .m-value{color:var(--danger);}
+  .metric-card.good .m-value{color:var(--success);}
+
+  /* ---------- core split ---------- */
+  .core-split{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;align-items:start;}
+  @media (max-width:1080px){.core-split{grid-template-columns:1fr;}}
+
+  .card{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px;}
+  .card h2{font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+
+  .tabbar{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--line);}
+  .tab-btn{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    padding:10px 8px 11px;margin-bottom:-1px;border:none;border-bottom:2px solid transparent;
+    background:none;color:var(--ink-soft);font-weight:500;font-size:13.5px;cursor:pointer;
+  }
+  .tab-btn.active{color:var(--ink);font-weight:600;border-bottom-color:var(--accent);}
+
+  .list-header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-bottom:14px;}
+  .list-title-col .list-title{font-weight:600;font-size:14.5px;}
+  .list-title-col .list-sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .search-box input{
+    padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);
+    min-width:180px;
+  }
+
+  .expense{
+    display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid var(--line);
+    border-radius:8px;background:var(--paper);margin-bottom:8px;
+  }
+  .expense-main{flex:1;min-width:0;}
+  .row-meta{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-soft);margin-bottom:3px;}
+  .category-badge{
+    display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;
+    padding:1px 8px;font-size:10.5px;color:var(--ink);
+  }
+  .category-badge .dot{width:6px;height:6px;border-radius:50%;}
+  .expense-desc{font-weight:600;font-size:14px;}
+  .expense-sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .row-payer{font-size:12px;color:var(--ink-soft);white-space:nowrap;}
+  .expense-amount{font-size:15px;font-weight:600;white-space:nowrap;font-family:"IBM Plex Mono",monospace;}
+  .expense-actions{display:flex;gap:2px;}
+  .icon-btn{
+    background:none;border:none;cursor:pointer;color:var(--ink-soft);padding:8px;border-radius:8px;
+    line-height:1;font-size:14px;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center;
+  }
+  .icon-btn:hover{background:var(--paper-2);color:var(--ink);}
+  .icon-btn.danger-arm{color:var(--accent-ink);background:var(--danger);}
+  .pool-badge{
+    display:inline-block;border:1px solid var(--line);color:var(--ink-soft);font-size:10px;font-weight:600;
+    padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:middle;
+  }
+  .empty-note{color:var(--ink-soft);font-size:13px;padding:8px 0;}
+  .date-heading{font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.07em;margin:14px 0 7px;}
+  .date-heading:first-child{margin-top:0;}
+  .list-footer{font-size:12px;color:var(--ink-soft);margin-top:6px;text-align:center;}
+
+  /* ---------- pool sub-panel ---------- */
+  .pool-stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line);}
+  .pool-stat .label{font-size:10.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+  .pool-stat .value{font-weight:600;font-size:15px;}
+  .pool-stat .value.pos{color:var(--success);}
+  .pool-stat .value.neg{color:var(--danger);}
+  .contrib-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .contrib-row:last-child{border-bottom:none;}
+  .contrib-right{display:flex;align-items:center;gap:6px;}
+
+  /* ---------- settle sub-panel ---------- */
+  .settle-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .settle-row:last-child{border-bottom:none;}
+  .settle-arrow{color:var(--accent);font-weight:600;}
+  .settle-amt{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-weight:600;}
+
+  /* ---------- form ---------- */
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+  .field label{font-size:12px;color:var(--ink-soft);font-weight:500;}
+  .field input, .field select{
+    width:100%;min-width:0;padding:11px 12px;min-height:42px;border:1px solid var(--line);
+    border-radius:8px;background:var(--paper);color:var(--ink);
+  }
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0;}
+  .row2 > .field{min-width:0;}
+  .cats{display:flex;flex-wrap:wrap;gap:7px;}
+  .cat-btn{
+    display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:none;border-radius:8px;
+    padding:8px 12px;min-height:38px;font-size:13px;font-weight:500;cursor:pointer;color:var(--ink);
+  }
+  .cat-btn .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .cat-btn.active{border-color:var(--ink);background:var(--ink);color:var(--paper-2);font-weight:600;}
+  .split-list{display:flex;flex-wrap:wrap;gap:7px;}
+  .split-chip{
+    display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;
+    padding:8px 12px;min-height:38px;font-size:13.5px;cursor:pointer;user-select:none;
+  }
+  .split-chip input{margin:0;width:16px;height:16px;accent-color:var(--accent);}
+  .form-actions{display:flex;gap:10px;margin-top:2px;}
+  .btn-primary{
+    background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;padding:12px 20px;
+    min-height:46px;font-size:14.5px;font-weight:600;cursor:pointer;flex:1;
+  }
+  .btn-ghost{
+    background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:12px 18px;
+    min-height:46px;font-size:14px;font-weight:500;cursor:pointer;
+  }
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-primary:active{filter:brightness(.94);}
+
+  /* ---------- balances card ---------- */
+  .balance-member-card{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .balance-member-card:last-child{border-bottom:none;}
+  .balance-info{flex:1;min-width:0;}
+  .balance-info .b-name{font-size:13.5px;font-weight:600;}
+  .balance-info .b-sub{font-size:11.5px;color:var(--ink-soft);margin-top:1px;}
+  .balance-amount-col{text-align:right;white-space:nowrap;}
+  .balance-amount-col .b-amt{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;}
+  .balance-amount-col .b-label{font-size:10.5px;color:var(--ink-soft);margin-top:1px;}
+  .pos{color:var(--success);}
+  .neg{color:var(--danger);}
+  .neu{color:var(--ink-soft);}
+
+  /* ---------- onboarding ---------- */
+  #onboarding{max-width:420px;margin:80px auto 40px;padding:0 16px;}
+  #onboarding .header-title{font-size:22px;margin-bottom:4px;}
+  #onboarding .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;}
+  .setup-members{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .tag{
+    display:flex;align-items:center;gap:7px;border:1px solid var(--line);color:var(--ink);border-radius:999px;
+    padding:8px 14px;min-height:38px;font-size:14px;font-weight:500;
+  }
+  .tag button{background:none;border:none;cursor:pointer;color:var(--ink-soft);font-size:16px;line-height:1;padding:2px;}
+  .tag button:hover{color:var(--danger);}
+  .add-member{display:flex;gap:6px;}
+  .add-member input{
+    width:150px;padding:8px 12px;min-height:38px;border-radius:999px;border:1px solid var(--line);
+    background:var(--paper);color:var(--ink);
+  }
+  .add-member button{
+    border-radius:8px;border:none;background:var(--accent);color:var(--accent-ink);padding:9px 16px;
+    min-height:38px;cursor:pointer;font-weight:600;
+  }
+  .hint{font-size:12.5px;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<div id="onboarding">
+  <div class="eyebrow">เริ่มทริปใหม่</div>
+  <div class="header-title">Trip Ledger</div>
+  <div style="margin-top:18px;">
+    <div class="field">
+      <label for="setupName">ชื่อทริป</label>
+      <input id="setupName" type="text" placeholder="เช่น ทริปเขาใหญ่ 2569" />
+    </div>
+    <div class="field">
+      <label for="setupMemberInput">สมาชิกในกลุ่ม (เพิ่มทีละคน)</label>
+      <div class="add-member">
+        <input id="setupMemberInput" type="text" placeholder="ชื่อเพื่อน" />
+        <button id="setupAddMemberBtn" type="button">เพิ่ม</button>
+      </div>
+      <div class="setup-members" id="setupMembers"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" id="setupStartBtn" type="button">เริ่มบันทึกทริป</button>
+      <button class="btn-ghost" id="setupCancelBtn" type="button" hidden>ยกเลิก</button>
+    </div>
+    <p class="hint" style="margin-top:10px;">แชร์ลิงก์นี้ให้เพื่อนในกลุ่ม ทุกคนจะเห็นรายจ่ายและยอดหารอัปเดตพร้อมกันแบบเรียลไทม์</p>
+  </div>
+</div>
+
+<div id="app" class="app-shell" hidden>
+  <div class="sidebar">
+    <div class="brand-row">
+      <div class="brand-logo"><span class="icon">👛</span>Trip Ledger</div>
+      <div class="sync-badge"><span class="sync-dot" id="syncDot"></span><span id="syncText">เรียลไทม์</span></div>
+    </div>
+    <hr class="divider">
+
+    <div>
+      <div class="sb-label">ทริปกลุ่มที่เลือก</div>
+      <button type="button" class="dropdown-button" id="tripDropdownBtn" aria-expanded="false">
+        <span id="tripDropdownLabel">-</span><span class="chev">▾</span>
+      </button>
+      <div class="trip-switcher-panel" id="tripSwitcherPanel" hidden>
+        <div id="tripSwitcherList"></div>
+        <button type="button" class="btn-ghost" id="newTripBtn" style="width:100%;margin-top:6px;">+ สร้างทริปใหม่</button>
+      </div>
+    </div>
+
+    <div class="nav-section" id="navSection">
+      <button type="button" class="nav-item active" data-nav="dashboard"><span class="icon">📊</span>แดชบอร์ดหลัก</button>
+      <button type="button" class="nav-item" data-nav="trips"><span class="icon">🗂</span>ทริปทั้งหมดของฉัน</button>
+      <button type="button" class="nav-item" data-nav="history"><span class="icon">📈</span>ประวัติประมวลผลยอด</button>
+      <button type="button" class="nav-item" data-nav="settings"><span class="icon">⚙️</span>การตั้งค่ากลุ่ม</button>
+    </div>
+    <hr class="divider">
+
+    <div>
+      <div class="members-header">
+        <div class="sb-label" style="margin-bottom:0;" id="membersCountLabel">สมาชิกกลุ่ม (0)</div>
+        <button type="button" class="icon-btn-sm" id="toggleAddMemberBtn" title="เพิ่มสมาชิก">+</button>
+      </div>
+      <div class="members-list" id="membersListBox"></div>
+      <div class="add-member-inline" id="addMemberInlineRow" hidden>
+        <input id="memberInput" type="text" placeholder="ชื่อเพื่อน" />
+        <button id="addMemberBtn" type="button">เพิ่ม</button>
+      </div>
+    </div>
+
+    <div class="pot-box">
+      <div class="pot-header"><span>🐷 เงินกองกลางปัจจุบัน</span></div>
+      <div class="pot-value mono" id="potRemainingValue">฿0</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="main-header">
+      <div>
+        <div class="breadcrumb">กลุ่มของฉัน<span class="sep">/</span><span id="breadcrumbTripShort"></span></div>
+        <div class="header-title" id="headerTripTitle"></div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn-action" id="shareTripBtn">🔗 <span id="shareTripLabel">เชิญเพื่อนร่วมทริป</span></button>
+        <button type="button" class="btn-action primary" id="settleBillBtn">✅ เคลียร์บิลทริปนี้</button>
+      </div>
+    </div>
+
+    <div class="top-stats-row">
+      <div class="metric-card">
+        <div class="m-label">ยอดใช้จ่ายรวมทั้งทริป</div>
+        <div class="m-value" id="statTotal">฿0</div>
+        <div class="m-sub">อัปเดตจากบันทึกรายจ่ายล่าสุด</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-label">ยอดใช้จ่ายเฉลี่ยต่อคน</div>
+        <div class="m-value" id="statAvg">฿0</div>
+        <div class="m-sub" id="statAvgSub">อ้างอิงสมาชิกทั้งหมด</div>
+      </div>
+      <div class="metric-card" id="statPoolCard">
+        <div class="m-label">สถานะกองกลางหลัก</div>
+        <div class="m-value" id="statPool">฿0</div>
+        <div class="m-sub">ยอดคงเหลือ (จากบิลกลางทั้งหมด)</div>
+      </div>
+    </div>
+
+    <div class="core-split">
+      <div class="left-area">
+        <div class="tabbar" id="listTabbar">
+          <button type="button" class="tab-btn active" data-tab="expenses">บันทึกรายจ่ายทั้งหมด</button>
+          <button type="button" class="tab-btn" data-tab="pool">กองกลาง / สตรีมรวม</button>
+          <button type="button" class="tab-btn" data-tab="settle">สรุปตารางชำระเงิน</button>
+        </div>
+
+        <div class="card">
+          <div class="list-header">
+            <div class="list-title-col">
+              <div class="list-title" id="listTitle">รายการรายจ่ายล่าสุด</div>
+              <div class="list-sub" id="listSub">แสดงประวัติรายจ่ายที่บันทึกไว้ในกลุ่มเรียงตามลำดับเวลา</div>
+            </div>
+            <div class="search-box" id="searchBox">
+              <input id="searchInput" type="text" placeholder="🔍 ค้นหาบิล..." />
+            </div>
+          </div>
+
+          <div id="panel-expenses">
+            <div id="expenseList"></div>
+            <div class="list-footer" id="expenseListFooter"></div>
+          </div>
+
+          <div id="panel-pool" hidden>
+            <div class="pool-stats">
+              <div class="pool-stat"><div class="label">เก็บมาแล้ว</div><div class="value mono" id="poolCollectedInline">฿0</div></div>
+              <div class="pool-stat"><div class="label">ใช้ไปแล้ว</div><div class="value mono" id="poolSpentInline">฿0</div></div>
+              <div class="pool-stat"><div class="label">คงเหลือ</div><div class="value mono" id="poolRemainingInline">฿0</div></div>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="contribMemberSelect">สมาชิก</label>
+                <select id="contribMemberSelect"></select>
+              </div>
+              <div class="field">
+                <label for="contribAmountInput">จำนวนเงิน (฿)</label>
+                <input id="contribAmountInput" type="number" min="0" step="0.01" placeholder="0" inputmode="decimal" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="contribDateInput">วันที่</label>
+              <input id="contribDateInput" type="date" />
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" id="addContribBtn" type="button">บันทึกเงินเข้ากองกลาง</button>
+            </div>
+            <div id="contribList" style="margin-top:14px;"></div>
+          </div>
+
+          <div id="panel-settle" hidden>
+            <div id="settleList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-area">
+        <div class="card">
+          <h2 id="formTitle" style="margin-bottom:14px;">บันทึกรายจ่ายใหม่</h2>
+          <div class="field">
+            <label for="descInput">ชื่อรายการ / กิจกรรม</label>
+            <input id="descInput" type="text" placeholder="เช่น ค่าอาหารเช้า, ค่าน้ำมัน" />
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="amountInput">จำนวนเงิน (บาท)</label>
+              <input id="amountInput" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal" />
+            </div>
+            <div class="field">
+              <label for="dateInput">วันที่</label>
+              <input id="dateInput" type="date" />
+            </div>
+          </div>
+          <div class="field">
+            <label>หมวดหมู่</label>
+            <div class="cats" id="catButtons"></div>
+          </div>
+          <div class="field">
+            <label for="paidBySelect">ผู้จ่ายเงิน</label>
+            <select id="paidBySelect"></select>
+          </div>
+          <div class="field">
+            <label>รูปแบบหารบิล (หารกับใครบ้าง)</label>
+            <div class="split-list" id="splitList"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-primary" id="submitExpenseBtn" type="button">บันทึกรายจ่ายเข้ากลุ่ม</button>
+            <button class="btn-ghost" id="cancelEditBtn" type="button" hidden>ยกเลิก</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 style="margin-bottom:6px;">ภาพรวมยอดเงินรายบุคคล</h2>
+          <div id="balanceList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var SUPABASE_URL = "https://hfkfqcnrykxlhwzscgkm.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_4zopcjkqoK8gBGrNwzlHIg_1Gs543tH";
+  var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  var POOL_ID = "__pool__";
+  var POOL_LABEL = "เงินกองกลาง";
+  function payerDisplay(name){ return name === POOL_ID ? POOL_LABEL : name; }
+
+  var CATEGORIES = [
+    {id:"food", label:"อาหาร", token:"--cat-food"},
+    {id:"stay", label:"ที่พัก", token:"--cat-stay"},
+    {id:"transport", label:"เดินทาง", token:"--cat-transport"},
+    {id:"activity", label:"กิจกรรม", token:"--cat-activity"},
+    {id:"other", label:"อื่นๆ", token:"--cat-other"}
+  ];
+  function catInfo(id){
+    for(var i=0;i<CATEGORIES.length;i++) if(CATEGORIES[i].id===id) return CATEGORIES[i];
+    return CATEGORIES[4];
+  }
+
+  var state = {
+    dbAvailable: null,
+    trips: [],
+    currentTripId: null,
+    creatingNewTrip: false,
+    trip: null,
+    expenses: [],
+    contributions: [],
+    selectedCat: "food",
+    editingId: null,
+    deleteArmId: null,
+    deleteArmContribId: null,
+    lastMembers: null,
+    listTab: "expenses",
+    search: ""
+  };
+
+  var currentTripChannel = null;
+  var TRIP_STORAGE_KEY = "tripLedger.currentTripId";
+  function getSavedTripId(){ try{ return localStorage.getItem(TRIP_STORAGE_KEY); }catch(e){ return null; } }
+  function saveTripId(id){ try{ localStorage.setItem(TRIP_STORAGE_KEY, id); }catch(e){} }
+
+  function rowToTrip(row){
+    return {id: row.id, name: row.name, members: row.members || [], currency: row.currency, createdAt: row.created_at};
+  }
+  function rowToExpense(row){
+    return {
+      id: row.id, description: row.description, amount: Number(row.amount),
+      category: row.category, date: row.date, paidBy: row.paid_by,
+      splitAmong: row.split_among || [], createdAt: row.created_at
+    };
+  }
+  function rowToContribution(row){
+    return {id: row.id, member: row.member, amount: Number(row.amount), date: row.date, createdAt: row.created_at};
+  }
+
+  function todayISO(){
+    var d = new Date();
+    var tz = d.getTimezoneOffset()*60000;
+    return new Date(d - tz).toISOString().slice(0,10);
+  }
+  function fmtMoney(n){
+    n = Math.round(n || 0);
+    return "฿" + n.toLocaleString("th-TH");
+  }
+  function fmtDateHeading(iso){
+    var d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString("th-TH", {day:"numeric", month:"short", year:"numeric"});
+  }
+  function initials(name){
+    return (name || "?").trim().slice(0,1).toUpperCase();
+  }
+
+  // ---------------- supabase wiring ----------------
+  async function init(){
+    dateInputDefault();
+    wireStaticEvents();
+    await loadTrips();
+
+    supabase.channel("trips-list-dash")
+      .on("postgres_changes", {event:"*", schema:"public", table:"trips"}, function(){ loadTrips(); })
+      .subscribe(function(status){
+        state.dbAvailable = (status === "SUBSCRIBED");
+        updateSyncNote();
+      });
+  }
+
+  async function loadTrips(){
+    var res = await supabase.from("trips").select("*").order("created_at",{ascending:false}).limit(200);
+    state.trips = (res.data || []).map(rowToTrip);
+    renderTripSwitcherList();
+    reconcileSelection();
+  }
+
+  function reconcileSelection(){
+    if(state.currentTripId && state.trips.some(function(t){ return t.id === state.currentTripId; })) return;
+    var saved = getSavedTripId();
+    var target = null;
+    if(saved && state.trips.some(function(t){ return t.id === saved; })) target = saved;
+    else if(state.trips.length > 0) target = state.trips[0].id;
+    if(target){ selectTrip(target); }
+    else { state.currentTripId = null; state.trip = null; onTripChange(); }
+  }
+
+  function selectTrip(tripId){
+    if(currentTripChannel){ supabase.removeChannel(currentTripChannel); currentTripChannel = null; }
+    state.currentTripId = tripId;
+    state.creatingNewTrip = false;
+    state.editingId = null;
+    state.deleteArmId = null;
+    state.deleteArmContribId = null;
+    state.lastMembers = null;
+    state.expenses = [];
+    state.contributions = [];
+    saveTripId(tripId);
+    resetForm();
+
+    refetchTrip(tripId);
+    refetchExpenses(tripId);
+    refetchContributions(tripId);
+
+    currentTripChannel = supabase.channel("trip-dash-" + tripId)
+      .on("postgres_changes", {event:"*", schema:"public", table:"trips", filter:"id=eq." + tripId}, function(){ refetchTrip(tripId); })
+      .on("postgres_changes", {event:"*", schema:"public", table:"expenses", filter:"trip_id=eq." + tripId}, function(){ refetchExpenses(tripId); })
+      .on("postgres_changes", {event:"*", schema:"public", table:"contributions", filter:"trip_id=eq." + tripId}, function(){ refetchContributions(tripId); })
+      .subscribe();
+
+    renderTripSwitcherList();
+  }
+
+  async function refetchTrip(tripId){
+    var res = await supabase.from("trips").select("*").eq("id", tripId).maybeSingle();
+    if(tripId !== state.currentTripId) return;
+    state.trip = res.data ? rowToTrip(res.data) : null;
+    onTripChange();
+  }
+  async function refetchExpenses(tripId){
+    var res = await supabase.from("expenses").select("*").eq("trip_id", tripId).order("created_at",{ascending:false}).limit(500);
+    if(tripId !== state.currentTripId) return;
+    state.expenses = (res.data || []).map(rowToExpense);
+    renderAll();
+  }
+  async function refetchContributions(tripId){
+    var res = await supabase.from("contributions").select("*").eq("trip_id", tripId).order("created_at",{ascending:false}).limit(500);
+    if(tripId !== state.currentTripId) return;
+    state.contributions = (res.data || []).map(rowToContribution);
+    renderAll();
+  }
+
+  function updateSyncNote(){
+    var dot = document.getElementById("syncDot");
+    var txt = document.getElementById("syncText");
+    if(state.dbAvailable){ dot.classList.remove("off"); txt.textContent = "เรียลไทม์"; }
+    else { dot.classList.add("off"); txt.textContent = "กำลังเชื่อมต่อ..."; }
+  }
+
+  function dateInputDefault(){
+    document.getElementById("dateInput").value = todayISO();
+    document.getElementById("contribDateInput").value = todayISO();
+  }
+
+  // ---------------- writes ----------------
+  async function createTrip(name, members){
+    var res = await supabase.from("trips").insert({name: name, members: members, currency: "THB"}).select().single();
+    if(res.error || !res.data) return;
+    selectTrip(res.data.id);
+  }
+  async function writeTrip(data){
+    await supabase.from("trips").update({name: data.name, members: data.members}).eq("id", state.currentTripId);
+    await refetchTrip(state.currentTripId);
+  }
+  async function addExpenseDoc(data){
+    await supabase.from("expenses").insert({
+      trip_id: state.currentTripId, description: data.description, amount: data.amount,
+      category: data.category, date: data.date, paid_by: data.paidBy, split_among: data.splitAmong
+    });
+    await refetchExpenses(state.currentTripId);
+  }
+  async function updateExpenseDoc(id, data){
+    await supabase.from("expenses").update({
+      description: data.description, amount: data.amount, category: data.category,
+      date: data.date, paid_by: data.paidBy, split_among: data.splitAmong
+    }).eq("id", id);
+    await refetchExpenses(state.currentTripId);
+  }
+  async function deleteExpenseDoc(id){
+    await supabase.from("expenses").delete().eq("id", id);
+    await refetchExpenses(state.currentTripId);
+  }
+  async function addContributionDoc(data){
+    await supabase.from("contributions").insert({trip_id: state.currentTripId, member: data.member, amount: data.amount, date: data.date});
+    await refetchContributions(state.currentTripId);
+  }
+  async function deleteContributionDoc(id){
+    await supabase.from("contributions").delete().eq("id", id);
+    await refetchContributions(state.currentTripId);
+  }
+
+  // ---------------- onboarding ----------------
+  var setupMembers = [];
+  function renderSetupMembers(){
+    var box = document.getElementById("setupMembers");
+    box.innerHTML = "";
+    setupMembers.forEach(function(name, idx){
+      var tag = document.createElement("span");
+      tag.className = "tag";
+      tag.appendChild(document.createTextNode(name));
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.textContent = "×";
+      btn.addEventListener("click", function(){ setupMembers.splice(idx,1); renderSetupMembers(); });
+      tag.appendChild(btn);
+      box.appendChild(tag);
+    });
+  }
+
+  function wireStaticEvents(){
+    document.getElementById("setupAddMemberBtn").addEventListener("click", function(){
+      var inp = document.getElementById("setupMemberInput");
+      var name = inp.value.trim();
+      if(name && setupMembers.indexOf(name) === -1){ setupMembers.push(name); renderSetupMembers(); }
+      inp.value = ""; inp.focus();
+    });
+    document.getElementById("setupMemberInput").addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); document.getElementById("setupAddMemberBtn").click(); }
+    });
+    document.getElementById("setupStartBtn").addEventListener("click", async function(){
+      var name = document.getElementById("setupName").value.trim() || "ทริปของกลุ่มเรา";
+      await createTrip(name, setupMembers.slice());
+    });
+    document.getElementById("setupCancelBtn").addEventListener("click", function(){
+      state.creatingNewTrip = false; onTripChange();
+    });
+
+    var dropBtn = document.getElementById("tripDropdownBtn");
+    dropBtn.addEventListener("click", function(){
+      var panel = document.getElementById("tripSwitcherPanel");
+      panel.hidden = !panel.hidden;
+      dropBtn.setAttribute("aria-expanded", String(!panel.hidden));
+      if(!panel.hidden) renderTripSwitcherList();
+    });
+    document.getElementById("newTripBtn").addEventListener("click", function(){
+      document.getElementById("tripSwitcherPanel").hidden = true;
+      setupMembers = [];
+      document.getElementById("setupName").value = "";
+      renderSetupMembers();
+      state.creatingNewTrip = true;
+      onTripChange();
+    });
+
+    document.getElementById("navSection").addEventListener("click", function(e){
+      var btn = e.target.closest(".nav-item");
+      if(!btn) return;
+      Array.prototype.forEach.call(document.querySelectorAll(".nav-item"), function(el){ el.classList.toggle("active", el === btn); });
+      var nav = btn.dataset.nav;
+      if(nav === "trips"){
+        document.getElementById("tripSwitcherPanel").hidden = false;
+        renderTripSwitcherList();
+      } else if(nav === "history"){
+        switchListTab("settle");
+        document.querySelector(".left-area").scrollIntoView({behavior:"smooth", block:"start"});
+      } else if(nav === "settings"){
+        document.getElementById("addMemberInlineRow").hidden = false;
+        document.getElementById("memberInput").focus();
+      }
+    });
+
+    document.getElementById("toggleAddMemberBtn").addEventListener("click", function(){
+      var row = document.getElementById("addMemberInlineRow");
+      row.hidden = !row.hidden;
+      if(!row.hidden) document.getElementById("memberInput").focus();
+    });
+    document.getElementById("addMemberBtn").addEventListener("click", addMemberFromInput);
+    document.getElementById("memberInput").addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); addMemberFromInput(); }
+    });
+
+    document.getElementById("headerTripTitle").addEventListener("click", startEditTripName);
+
+    document.getElementById("shareTripBtn").addEventListener("click", async function(){
+      try{
+        await navigator.clipboard.writeText(location.href);
+        var lbl = document.getElementById("shareTripLabel");
+        var prev = lbl.textContent;
+        lbl.textContent = "คัดลอกลิงก์แล้ว!";
+        setTimeout(function(){ lbl.textContent = prev; }, 1800);
+      }catch(e){}
+    });
+    document.getElementById("settleBillBtn").addEventListener("click", function(){
+      switchListTab("settle");
+      document.querySelector(".left-area").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    document.getElementById("listTabbar").addEventListener("click", function(e){
+      var btn = e.target.closest(".tab-btn");
+      if(!btn) return;
+      switchListTab(btn.dataset.tab);
+    });
+
+    document.getElementById("searchInput").addEventListener("input", function(e){
+      state.search = e.target.value.trim().toLowerCase();
+      renderExpenseList();
+    });
+
+    var cats = document.getElementById("catButtons");
+    CATEGORIES.forEach(function(c){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "cat-btn";
+      b.dataset.cat = c.id;
+      b.innerHTML = '<span class="dot" style="background:var(' + c.token + ')"></span>' + c.label;
+      b.addEventListener("click", function(){
+        state.selectedCat = c.id;
+        Array.prototype.forEach.call(cats.children, function(el){ el.classList.toggle("active", el.dataset.cat === c.id); });
+      });
+      cats.appendChild(b);
+    });
+    cats.children[0].classList.add("active");
+
+    document.getElementById("submitExpenseBtn").addEventListener("click", submitExpense);
+    document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+
+    document.getElementById("addContribBtn").addEventListener("click", async function(){
+      var member = document.getElementById("contribMemberSelect").value;
+      var amount = parseFloat(document.getElementById("contribAmountInput").value);
+      var date = document.getElementById("contribDateInput").value || todayISO();
+      if(!member || !amount || amount <= 0) return;
+      await addContributionDoc({member: member, amount: amount, date: date});
+      document.getElementById("contribAmountInput").value = "";
+    });
+  }
+
+  function switchListTab(tab){
+    state.listTab = tab;
+    Array.prototype.forEach.call(document.querySelectorAll("#listTabbar .tab-btn"), function(btn){
+      btn.classList.toggle("active", btn.dataset.tab === tab);
+    });
+    document.getElementById("panel-expenses").hidden = tab !== "expenses";
+    document.getElementById("panel-pool").hidden = tab !== "pool";
+    document.getElementById("panel-settle").hidden = tab !== "settle";
+    document.getElementById("searchBox").hidden = tab !== "expenses";
+
+    var titles = {
+      expenses: ["รายการรายจ่ายล่าสุด", "แสดงประวัติรายจ่ายที่บันทึกไว้ในกลุ่มเรียงตามลำดับเวลา"],
+      pool: ["เงินกองกลาง", "บันทึกเงินสมทบและติดตามยอดคงเหลือของกองกลาง"],
+      settle: ["สรุปตารางชำระเงิน", "รายการโอนเงินที่แนะนำเพื่อเคลียร์ยอดให้เท่ากัน"]
+    };
+    document.getElementById("listTitle").textContent = titles[tab][0];
+    document.getElementById("listSub").textContent = titles[tab][1];
+  }
+
+  async function addMemberFromInput(){
+    var inp = document.getElementById("memberInput");
+    var name = inp.value.trim();
+    if(!name || !state.trip) return;
+    var members = (state.trip.members || []).slice();
+    if(members.indexOf(name) === -1){
+      members.push(name);
+      await writeTrip(Object.assign({}, state.trip, {members: members}));
+    }
+    inp.value = ""; inp.focus();
+  }
+  async function removeMember(name){
+    if(!state.trip) return;
+    var members = (state.trip.members || []).filter(function(m){ return m !== name; });
+    await writeTrip(Object.assign({}, state.trip, {members: members}));
+  }
+
+  function startEditTripName(){
+    var view = document.getElementById("headerTripTitle");
+    var current = state.trip.name;
+    view.innerHTML = "";
+    var input = document.createElement("input");
+    input.type = "text"; input.value = current;
+    view.appendChild(input);
+    input.focus(); input.select();
+    function commit(){
+      var v = input.value.trim() || current;
+      writeTrip(Object.assign({}, state.trip, {name: v}));
+    }
+    input.addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); commit(); }
+      if(e.key === "Escape"){ renderMainHeader(); }
+    });
+    input.addEventListener("blur", commit);
+  }
+
+  // ---------------- rendering ----------------
+  function renderTripSwitcherList(){
+    var box = document.getElementById("tripSwitcherList");
+    if(!box) return;
+    box.innerHTML = "";
+    if(state.trips.length === 0){
+      var p = document.createElement("p");
+      p.className = "empty-note"; p.textContent = "ยังไม่มีทริป";
+      box.appendChild(p);
+      return;
+    }
+    state.trips.forEach(function(t){
+      var row = document.createElement("div");
+      row.className = "trip-switcher-row" + (t.id === state.currentTripId ? " current" : "");
+      var nameSpan = document.createElement("span");
+      nameSpan.textContent = t.name;
+      var metaSpan = document.createElement("span");
+      metaSpan.className = "meta";
+      var created = t.createdAt ? new Date(t.createdAt) : null;
+      var memberCount = (t.members || []).length;
+      metaSpan.textContent = memberCount + " คน" + (created ? " · เริ่ม " + created.toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"}) : "");
+      row.appendChild(nameSpan);
+      row.appendChild(metaSpan);
+      row.addEventListener("click", function(){
+        document.getElementById("tripSwitcherPanel").hidden = true;
+        document.getElementById("tripDropdownBtn").setAttribute("aria-expanded", "false");
+        if(t.id !== state.currentTripId) selectTrip(t.id);
+      });
+      box.appendChild(row);
+    });
+  }
+
+  function onTripChange(){
+    var onboarding = document.getElementById("onboarding");
+    var app = document.getElementById("app");
+    var showOnboarding = !state.trip || state.creatingNewTrip;
+
+    if(showOnboarding){
+      onboarding.hidden = false;
+      app.hidden = true;
+      document.getElementById("setupCancelBtn").hidden = !state.trip;
+      renderSetupMembers();
+    } else {
+      onboarding.hidden = true;
+      app.hidden = false;
+      renderMainHeader();
+      var membersKey = JSON.stringify(state.trip.members || []);
+      if(membersKey !== state.lastMembers){
+        state.lastMembers = membersKey;
+        renderMemberDependentFormParts();
+        renderMembersSidebar();
+      }
+      renderAll();
+    }
+  }
+
+  function renderMainHeader(){
+    document.getElementById("headerTripTitle").textContent = state.trip.name;
+    document.getElementById("tripDropdownLabel").textContent = state.trip.name;
+    document.getElementById("breadcrumbTripShort").textContent = state.trip.name;
+  }
+
+  function renderMembersSidebar(){
+    var members = state.trip.members || [];
+    document.getElementById("membersCountLabel").textContent = "สมาชิกกลุ่ม (" + members.length + ")";
+    var box = document.getElementById("membersListBox");
+    box.innerHTML = "";
+    if(members.length === 0){
+      var note = document.createElement("div");
+      note.className = "hint";
+      note.textContent = "ยังไม่มีสมาชิก กดปุ่ม + เพื่อเพิ่ม";
+      box.appendChild(note);
+    }
+    members.forEach(function(name, idx){
+      var row = document.createElement("div");
+      row.className = "member-row";
+      var av = document.createElement("div");
+      av.className = "avatar";
+      av.textContent = initials(name);
+      var nameEl = document.createElement("div");
+      nameEl.className = "member-name";
+      nameEl.textContent = name;
+      row.appendChild(av);
+      row.appendChild(nameEl);
+      if(idx === 0){
+        var badge = document.createElement("span");
+        badge.className = "admin-badge";
+        badge.textContent = "ผู้สร้างทริป";
+        row.appendChild(badge);
+      }
+      var rm = document.createElement("button");
+      rm.className = "member-remove"; rm.type = "button"; rm.textContent = "×"; rm.title = "ลบสมาชิก";
+      rm.addEventListener("click", function(){ removeMember(name); });
+      row.appendChild(rm);
+      box.appendChild(row);
+    });
+  }
+
+  function renderMemberDependentFormParts(){
+    var members = state.trip.members || [];
+    var paidBy = document.getElementById("paidBySelect");
+    var prevPaid = paidBy.value;
+    paidBy.innerHTML = "";
+    members.forEach(function(name){
+      var opt = document.createElement("option"); opt.value = name; opt.textContent = name;
+      paidBy.appendChild(opt);
+    });
+    var poolOpt = document.createElement("option");
+    poolOpt.value = POOL_ID; poolOpt.textContent = POOL_LABEL + " (จ่ายจากกองกลาง)";
+    paidBy.appendChild(poolOpt);
+    if(prevPaid === POOL_ID || members.indexOf(prevPaid) !== -1) paidBy.value = prevPaid;
+
+    var contribSel = document.getElementById("contribMemberSelect");
+    var prevContrib = contribSel.value;
+    contribSel.innerHTML = "";
+    members.forEach(function(name){
+      var opt = document.createElement("option"); opt.value = name; opt.textContent = name;
+      contribSel.appendChild(opt);
+    });
+    if(members.indexOf(prevContrib) !== -1) contribSel.value = prevContrib;
+
+    var splitBox = document.getElementById("splitList");
+    var prevChecked = {};
+    Array.prototype.forEach.call(splitBox.querySelectorAll("input"), function(inp){ prevChecked[inp.value] = inp.checked; });
+    splitBox.innerHTML = "";
+    members.forEach(function(name){
+      var lab = document.createElement("label"); lab.className = "split-chip";
+      var cb = document.createElement("input"); cb.type = "checkbox"; cb.value = name;
+      cb.checked = prevChecked.hasOwnProperty(name) ? prevChecked[name] : true;
+      lab.appendChild(cb);
+      lab.appendChild(document.createTextNode(name));
+      splitBox.appendChild(lab);
+    });
+  }
+
+  function resetForm(){
+    state.editingId = null;
+    document.getElementById("formTitle").textContent = "บันทึกรายจ่ายใหม่";
+    document.getElementById("submitExpenseBtn").textContent = "บันทึกรายจ่ายเข้ากลุ่ม";
+    document.getElementById("cancelEditBtn").hidden = true;
+    document.getElementById("descInput").value = "";
+    document.getElementById("amountInput").value = "";
+    dateInputDefault();
+    state.selectedCat = "food";
+    Array.prototype.forEach.call(document.getElementById("catButtons").children, function(el){
+      el.classList.toggle("active", el.dataset.cat === "food");
+    });
+    Array.prototype.forEach.call(document.getElementById("splitList").querySelectorAll("input"), function(cb){ cb.checked = true; });
+  }
+
+  function beginEdit(exp){
+    state.editingId = exp.id;
+    document.getElementById("formTitle").textContent = "แก้ไขรายจ่าย";
+    document.getElementById("submitExpenseBtn").textContent = "บันทึกการแก้ไข";
+    document.getElementById("cancelEditBtn").hidden = false;
+    document.getElementById("descInput").value = exp.description;
+    document.getElementById("amountInput").value = exp.amount;
+    document.getElementById("dateInput").value = exp.date;
+    state.selectedCat = exp.category;
+    Array.prototype.forEach.call(document.getElementById("catButtons").children, function(el){
+      el.classList.toggle("active", el.dataset.cat === exp.category);
+    });
+    document.getElementById("paidBySelect").value = exp.paidBy;
+    Array.prototype.forEach.call(document.getElementById("splitList").querySelectorAll("input"), function(cb){
+      cb.checked = exp.splitAmong.indexOf(cb.value) !== -1;
+    });
+    document.querySelector(".right-area").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  async function submitExpense(){
+    var desc = document.getElementById("descInput").value.trim();
+    var amount = parseFloat(document.getElementById("amountInput").value);
+    var date = document.getElementById("dateInput").value || todayISO();
+    var paidBy = document.getElementById("paidBySelect").value;
+    var splitAmong = Array.prototype.filter.call(
+      document.getElementById("splitList").querySelectorAll("input"),
+      function(cb){ return cb.checked; }
+    ).map(function(cb){ return cb.value; });
+
+    if(!desc || !amount || amount <= 0 || !paidBy || splitAmong.length === 0) return;
+
+    var payload = {description: desc, amount: amount, category: state.selectedCat, date: date, paidBy: paidBy, splitAmong: splitAmong};
+    if(state.editingId) await updateExpenseDoc(state.editingId, payload);
+    else await addExpenseDoc(payload);
+    resetForm();
+  }
+
+  function armDelete(kind, id){
+    if(kind === "expense") state.deleteArmId = id; else state.deleteArmContribId = id;
+    renderAll();
+    setTimeout(function(){
+      var stillArmed = kind === "expense" ? state.deleteArmId === id : state.deleteArmContribId === id;
+      if(stillArmed){
+        if(kind === "expense") state.deleteArmId = null; else state.deleteArmContribId = null;
+        renderAll();
+      }
+    }, 4000);
+  }
+
+  function renderAll(){
+    if(!state.trip) return;
+    renderExpenseList();
+    renderContributionList();
+    renderSummary();
+  }
+
+  function renderContributionList(){
+    var box = document.getElementById("contribList");
+    box.innerHTML = "";
+    if(state.contributions.length === 0){
+      var p = document.createElement("p"); p.className = "empty-note"; p.textContent = "ยังไม่มีการเก็บเงินกองกลาง";
+      box.appendChild(p);
+      return;
+    }
+    var sorted = state.contributions.slice().sort(function(a,b){ return (b.createdAt || "").localeCompare(a.createdAt || ""); });
+    sorted.forEach(function(c){
+      var row = document.createElement("div"); row.className = "contrib-row";
+      var left = document.createElement("span");
+      left.textContent = c.member + " · " + fmtDateHeading(c.date);
+      var right = document.createElement("span"); right.className = "contrib-right";
+      var amt = document.createElement("span"); amt.className = "mono"; amt.style.fontWeight = "600";
+      amt.textContent = fmtMoney(c.amount);
+      var del = document.createElement("button");
+      del.className = "icon-btn" + (state.deleteArmContribId === c.id ? " danger-arm" : "");
+      del.title = "ลบ"; del.textContent = state.deleteArmContribId === c.id ? "ยืนยันลบ" : "🗑";
+      del.addEventListener("click", function(){
+        if(state.deleteArmContribId === c.id){ deleteContributionDoc(c.id); state.deleteArmContribId = null; }
+        else armDelete("contrib", c.id);
+      });
+      right.appendChild(amt); right.appendChild(del);
+      row.appendChild(left); row.appendChild(right);
+      box.appendChild(row);
+    });
+  }
+
+  function renderExpenseList(){
+    var list = document.getElementById("expenseList");
+    list.innerHTML = "";
+    var all = state.expenses;
+    var filtered = state.search
+      ? all.filter(function(e){ return e.description.toLowerCase().indexOf(state.search) !== -1; })
+      : all;
+
+    if(all.length === 0){
+      var empty = document.createElement("p"); empty.className = "empty-note";
+      empty.textContent = "ยังไม่มีรายจ่าย เริ่มบันทึกรายการแรกได้เลย";
+      list.appendChild(empty);
+    } else if(filtered.length === 0){
+      var noMatch = document.createElement("p"); noMatch.className = "empty-note";
+      noMatch.textContent = "ไม่พบรายการที่ตรงกับคำค้นหา";
+      list.appendChild(noMatch);
+    }
+
+    var sorted = filtered.slice().sort(function(a,b){
+      if(a.date !== b.date) return a.date < b.date ? 1 : -1;
+      return (b.createdAt || "").localeCompare(a.createdAt || "");
+    });
+    var lastDate = null;
+    sorted.forEach(function(exp){
+      if(exp.date !== lastDate){
+        lastDate = exp.date;
+        var h = document.createElement("div"); h.className = "date-heading"; h.textContent = fmtDateHeading(exp.date);
+        list.appendChild(h);
+      }
+      var row = document.createElement("div"); row.className = "expense";
+
+      var main = document.createElement("div"); main.className = "expense-main";
+      var meta = document.createElement("div"); meta.className = "row-meta";
+      var badge = document.createElement("span"); badge.className = "category-badge";
+      badge.innerHTML = '<span class="dot" style="background:var(' + catInfo(exp.category).token + ')"></span>' + catInfo(exp.category).label;
+      meta.appendChild(badge);
+      main.appendChild(meta);
+
+      var desc = document.createElement("div"); desc.className = "expense-desc";
+      desc.textContent = exp.description;
+      if(exp.paidBy === POOL_ID){
+        var pb = document.createElement("span"); pb.className = "pool-badge"; pb.textContent = "กองกลาง";
+        desc.appendChild(pb);
+      }
+      main.appendChild(desc);
+
+      var sub = document.createElement("div"); sub.className = "expense-sub";
+      sub.textContent = "แบ่งแบบ: หารกัน " + exp.splitAmong.length + " คน";
+      main.appendChild(sub);
+
+      var payer = document.createElement("div"); payer.className = "row-payer";
+      payer.textContent = payerDisplay(exp.paidBy) + " จ่าย";
+
+      var amt = document.createElement("div"); amt.className = "expense-amount"; amt.textContent = fmtMoney(exp.amount);
+
+      var actions = document.createElement("div"); actions.className = "expense-actions";
+      var editBtn = document.createElement("button"); editBtn.className = "icon-btn"; editBtn.title = "แก้ไข"; editBtn.textContent = "✎";
+      editBtn.addEventListener("click", function(){ beginEdit(exp); });
+      var delBtn = document.createElement("button");
+      delBtn.className = "icon-btn" + (state.deleteArmId === exp.id ? " danger-arm" : "");
+      delBtn.title = "ลบ"; delBtn.textContent = state.deleteArmId === exp.id ? "ยืนยันลบ" : "🗑";
+      delBtn.addEventListener("click", function(){
+        if(state.deleteArmId === exp.id){ deleteExpenseDoc(exp.id); state.deleteArmId = null; }
+        else armDelete("expense", exp.id);
+      });
+      actions.appendChild(editBtn); actions.appendChild(delBtn);
+
+      row.appendChild(main);
+      row.appendChild(payer);
+      row.appendChild(amt);
+      row.appendChild(actions);
+      list.appendChild(row);
+    });
+
+    document.getElementById("expenseListFooter").textContent = all.length
+      ? "แสดงผล " + filtered.length + " รายการจากทั้งหมด " + all.length + " รายการ"
+      : "";
+  }
+
+  function computeBalances(){
+    var members = state.trip.members || [];
+    var balances = {};
+    members.forEach(function(m){ balances[m] = 0; });
+    var totalsByCategory = {};
+    var total = 0;
+    var poolSpent = 0;
+
+    state.expenses.forEach(function(exp){
+      total += exp.amount;
+      totalsByCategory[exp.category] = (totalsByCategory[exp.category] || 0) + exp.amount;
+      if(exp.paidBy === POOL_ID){ poolSpent += exp.amount; }
+      else if(balances.hasOwnProperty(exp.paidBy)){ balances[exp.paidBy] += exp.amount; }
+      else { balances[exp.paidBy] = exp.amount; }
+      var share = exp.amount / exp.splitAmong.length;
+      exp.splitAmong.forEach(function(name){
+        if(balances.hasOwnProperty(name)) balances[name] -= share;
+        else balances[name] = -share;
+      });
+    });
+
+    var poolCollected = 0;
+    state.contributions.forEach(function(c){
+      poolCollected += c.amount;
+      if(balances.hasOwnProperty(c.member)) balances[c.member] += c.amount;
+      else balances[c.member] = c.amount;
+    });
+
+    return {
+      balances: balances, total: total, totalsByCategory: totalsByCategory,
+      poolCollected: poolCollected, poolSpent: poolSpent, poolRemaining: poolCollected - poolSpent
+    };
+  }
+
+  function simplifyDebts(balances){
+    var creditors = [], debtors = [];
+    Object.keys(balances).forEach(function(name){
+      var v = balances[name];
+      if(v > 0.5) creditors.push({name:name, amt:v});
+      else if(v < -0.5) debtors.push({name:name, amt:-v});
+    });
+    creditors.sort(function(a,b){ return b.amt - a.amt; });
+    debtors.sort(function(a,b){ return b.amt - a.amt; });
+    var transfers = [], i=0, j=0;
+    while(i < debtors.length && j < creditors.length){
+      var pay = Math.min(debtors[i].amt, creditors[j].amt);
+      transfers.push({from: debtors[i].name, to: creditors[j].name, amount: pay});
+      debtors[i].amt -= pay; creditors[j].amt -= pay;
+      if(debtors[i].amt < 0.5) i++;
+      if(creditors[j].amt < 0.5) j++;
+    }
+    return transfers;
+  }
+
+  function renderSummary(){
+    var result = computeBalances();
+    var members = state.trip.members || [];
+
+    document.getElementById("statTotal").textContent = fmtMoney(result.total);
+    document.getElementById("statAvg").textContent = fmtMoney(members.length ? result.total / members.length : 0);
+    document.getElementById("statAvgSub").textContent = "อ้างอิงสมาชิกทั้งหมด " + members.length + " คน";
+    document.getElementById("statPool").textContent = fmtMoney(result.poolRemaining);
+    var poolCard = document.getElementById("statPoolCard");
+    poolCard.classList.toggle("warn", result.poolRemaining < 0);
+    poolCard.classList.toggle("good", result.poolRemaining > 0);
+
+    document.getElementById("potRemainingValue").textContent = fmtMoney(result.poolRemaining);
+
+    document.getElementById("poolCollectedInline").textContent = fmtMoney(result.poolCollected);
+    document.getElementById("poolSpentInline").textContent = fmtMoney(result.poolSpent);
+    var remInline = document.getElementById("poolRemainingInline");
+    remInline.textContent = fmtMoney(result.poolRemaining);
+    remInline.className = "value mono" + (result.poolRemaining < 0 ? " neg" : (result.poolRemaining > 0 ? " pos" : ""));
+
+    var balBox = document.getElementById("balanceList");
+    balBox.innerHTML = "";
+    if(members.length === 0){
+      var pe = document.createElement("p"); pe.className = "empty-note"; pe.textContent = "เพิ่มสมาชิกเพื่อดูยอดคงเหลือ";
+      balBox.appendChild(pe);
+    }
+    members.forEach(function(name){
+      var v = result.balances[name] || 0;
+      var cls = v > 0.5 ? "pos" : (v < -0.5 ? "neg" : "neu");
+      var label = v > 0.5 ? "รับคืนทั้งหมด" : (v < -0.5 ? "ต้องจ่ายเพิ่ม" : "เคลียร์แล้ว");
+      var sub = v > 0.5 ? "จ่ายออกไปมากกว่าที่ต้องรับผิดชอบ" : (v < -0.5 ? "ต้องจ่ายสมทบเพิ่มหลังจากยอดทริปรวมเคลียร์" : "ยอดพอดีกับที่ต้องรับผิดชอบ");
+
+      var row = document.createElement("div"); row.className = "balance-member-card";
+      var av = document.createElement("div"); av.className = "avatar"; av.textContent = initials(name);
+      var info = document.createElement("div"); info.className = "balance-info";
+      var nEl = document.createElement("div"); nEl.className = "b-name"; nEl.textContent = name;
+      var sEl = document.createElement("div"); sEl.className = "b-sub"; sEl.textContent = sub;
+      info.appendChild(nEl); info.appendChild(sEl);
+      var col = document.createElement("div"); col.className = "balance-amount-col";
+      var aEl = document.createElement("div"); aEl.className = "b-amt " + cls;
+      aEl.textContent = (v > 0.5 ? "+" : (v < -0.5 ? "-" : "")) + fmtMoney(Math.abs(v));
+      var lEl = document.createElement("div"); lEl.className = "b-label"; lEl.textContent = label;
+      col.appendChild(aEl); col.appendChild(lEl);
+
+      row.appendChild(av); row.appendChild(info); row.appendChild(col);
+      balBox.appendChild(row);
+    });
+
+    var settleBox = document.getElementById("settleList");
+    settleBox.innerHTML = "";
+    var transfers = simplifyDebts(result.balances);
+    if(transfers.length === 0){
+      var ps = document.createElement("p"); ps.className = "empty-note"; ps.textContent = "ยอดเคลียร์กันหมดแล้ว";
+      settleBox.appendChild(ps);
+    }
+    transfers.forEach(function(t){
+      var row = document.createElement("div"); row.className = "settle-row";
+      row.innerHTML = '<span>' + t.from + '</span><span class="settle-arrow">→</span><span>' + t.to + '</span><span class="settle-amt">' + fmtMoney(t.amount) + '</span>';
+      settleBox.appendChild(row);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
